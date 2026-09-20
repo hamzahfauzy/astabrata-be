@@ -1,14 +1,4 @@
 /vendor
 /.env
 
-/app/*
-!/app
-!/app/.gitkeep
-
-/modules/*
-!/modules/auth
-!/modules/permissions
-!/modules/roles
-!/modules/users
-!/modules/dashboard.php
 /uploads/*
