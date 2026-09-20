@@ -1,0 +1,25 @@
+<?php
+
+$protocol = 'http';
+$port     = '8080';
+$address  = '127.0.0.1';
+$command  = "";
+
+foreach ($argv as $arg) {
+    $e=explode("=",$arg);
+    if($e[0] == '--address')
+    {
+        $address = $e[1];
+    }
+
+    if($e[0] == '--port')
+    {
+        $port = $e[1];
+    }
+    
+}
+
+echo "PHP Native Backend Started at $protocol://$address:$port\n";
+$cmd = "php -S ".$address.":".$port;
+shell_exec($cmd);
+die();
