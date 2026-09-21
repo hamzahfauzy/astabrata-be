@@ -59,6 +59,7 @@ Route::crud('/periods', 'modules/master/periods/config', 'periods.', isAuthentic
 // Route::crud('/kpm/profiles', 'modules/kpm/profiles/config', 'profiles.', isAuthenticated());
 Route::get('/kpm/dashboard', isAuthenticated(), periodActive(), 'modules/kpm/dashboard');
 
+Route::get('/kpm/profile-documents', isAuthenticated(), permissionMiddleware('desa'), periodActive(), 'modules/kpm/profiles/documents');
 Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
 Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');
 Route::post('/kpm/profiles/{id}/stage', isAuthenticated(), periodActive(), 'modules/kpm/profiles/submit-stage');

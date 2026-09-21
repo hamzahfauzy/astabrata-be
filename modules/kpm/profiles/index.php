@@ -32,7 +32,7 @@ else if(auth()->can('kecamatan'))
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
 }
 
-$lists = (new DatabaseService)->listing($query);
+$lists = (new DatabaseService)->listing($query, ['profiles.name','profiles.personal_number','profiles.family_number']);
 
 return [
     'messages' => __('Data retrieved.'),
