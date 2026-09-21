@@ -3,11 +3,24 @@
 use Libraries\Database as DB;
 use Libraries\Services\DatabaseService;
 
+$user = auth()->user();
 $activePeriod = request()->otherData('activePeriod');
 $query = DB::table('profiles')->select('profiles.*')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
         ->where('profile_periods.period_id','=',$activePeriod->id);
         // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
+
+if(auth()->can('desa'))
+{
+    $assigment = DB::table('user_assignment')
+        ->select('user_assignment.*, villages.name village_name, regions.name region_name')
+        ->leftJoin('villages','villages.id','=','user_assignment.model_id')
+        ->leftJoin('regions','regions.id','=','villages.region_id')
+        ->where('user_id','=',$user->id)->first();
+
+    $query = $query->where('profile_periods.region','=',$assigment->region_name)
+        ->where('profile_periods.village','=',$assigment->village_name);
+}
 
 if(auth()->can('pendamping'))
 {

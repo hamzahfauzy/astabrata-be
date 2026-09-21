@@ -28,13 +28,10 @@ profile_periods.stage,
 profile_periods.status
 ')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
-        ->where('profile_periods.period_id','=',$activePeriod->id)
-        ->get();
+        ->where('profile_periods.period_id','=',$activePeriod->id);
         // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
 
-$data = [
-    'profiles' => $profiles
-];
+$data = [];
 
 if(auth()->can('desa'))
 {
@@ -50,6 +47,8 @@ if(auth()->can('desa'))
     $data['totalProfileDraft'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Draft')->first()?->total;
     $data['totalProfileWait'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
     $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Revisi')->first()?->total;
+    $profiles = $profiles->where('profile_periods.region','=',$assigment->region_name)
+        ->where('profile_periods.village','=',$assigment->village_name);
 }
 
 if(auth()->can('pendamping'))
@@ -63,5 +62,6 @@ else if(auth()->can('kecamatan'))
 }
 
 $data['totalProfile'] = $query->first()?->total ?? 0;
+$data['profiles'] = $profiles->get();
 
 return Response::json(__('Data retrieved.'), $data);
