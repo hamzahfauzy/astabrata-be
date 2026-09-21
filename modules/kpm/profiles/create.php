@@ -19,7 +19,7 @@ try {
         'profile_id' => $profileId,
         'period_id' => $activePeriod->id,
         'stage' => 'stage_1',
-        'status' => 'USULAN'
+        // 'status' => 'Menunggu Verifikasi'
     ]);
     
     DB::table('profile_businesses')->insert([

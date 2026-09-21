@@ -45,7 +45,7 @@ Route::crud('/roles', 'modules/roles/config', 'roles.', isAuthenticated());
 Route::crud('/permissions', 'modules/permissions/config', 'permissions.', isAuthenticated());
 Route::crud('/users', 'modules/users/config', 'users.', isAuthenticated());
 
-Route::get('/villages/find-by-region-name/{name}', isAuthenticated(), permissionMiddleware('regions.index'), 'modules/master/villages/find-by-region-name');
+Route::get('/villages/find-by-region-name/{name}', isAuthenticated(), 'modules/master/villages/find-by-region-name');
 
 Route::get('/regions/get', isAuthenticated(), 'modules/master/regions/get');
 Route::get('/educations/get', isAuthenticated(), 'modules/master/educations/get');
@@ -57,6 +57,8 @@ Route::crud('/educations', 'modules/master/educations/config', 'educations.', is
 Route::crud('/periods', 'modules/master/periods/config', 'periods.', isAuthenticated());
 
 // Route::crud('/kpm/profiles', 'modules/kpm/profiles/config', 'profiles.', isAuthenticated());
+Route::get('/kpm/dashboard', isAuthenticated(), periodActive(), 'modules/kpm/dashboard');
+
 Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
 Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');
 Route::post('/kpm/profiles/{id}/stage', isAuthenticated(), periodActive(), 'modules/kpm/profiles/submit-stage');
