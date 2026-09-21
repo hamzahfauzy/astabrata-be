@@ -60,7 +60,28 @@ Route::crud('/periods', 'modules/master/periods/config', 'periods.', isAuthentic
 Route::get('/kpm/dashboard', isAuthenticated(), periodActive(), 'modules/kpm/dashboard');
 
 Route::get('/kpm/profile-documents', isAuthenticated(), permissionMiddleware('desa'), periodActive(), 'modules/kpm/profiles/documents');
+Route::get('/kpm/profile-revisions', isAuthenticated(), permissionMiddleware('desa'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Belum Sesuai');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-scheduled', isAuthenticated(), permissionMiddleware('pendamping'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Jadwalkan Kunjungan');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-returned', isAuthenticated(), permissionMiddleware('pendamping'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Belum Sesuai');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-administrations', isAuthenticated(), permissionMiddleware('kecamatan'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Sesuai');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-nominatif', isAuthenticated(), permissionMiddleware('kecamatan'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Diusulkan');
+}, 'modules/kpm/profiles/index');
+
 Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
 Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');
+Route::put('/kpm/profiles/{id}', isAuthenticated(), periodActive(), permissionMiddleware('desa'), 'modules/kpm/profiles/update');
 Route::post('/kpm/profiles/{id}/stage', isAuthenticated(), periodActive(), 'modules/kpm/profiles/submit-stage');
 Route::post('/kpm/profiles', isAuthenticated(), permissionMiddleware('desa'), periodActive(), 'modules/kpm/profiles/create');

@@ -46,19 +46,29 @@ if(auth()->can('desa'))
 
     $data['totalProfileDraft'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Draft')->first()?->total;
     $data['totalProfileWait'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
-    $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Revisi')->first()?->total;
+    $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Belum Sesuai')->first()?->total;
     $profiles = $profiles->where('profile_periods.region','=',$assigment->region_name)
-        ->where('profile_periods.village','=',$assigment->village_name);
+        ->where('profile_periods.village','=',$assigment->village_name)->where('profile_periods.stage','=','stage_1');
 }
 
 if(auth()->can('pendamping'))
 {
-    // $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_1")');
+
+    $data['totalProfileVerified'] = (clone $query)->where('profile_periods.stage','<>','stage_1')->first()?->total;
+    $data['totalProfileScheduled'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Jadwalkan Kunjungan')->first()?->total;
+    $data['totalProfileWait'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
+    $data['totalProfileReturn'] = (clone $query)->where('profile_periods.stage','=','stage_1')->where('profile_periods.status','=','Belum Sesuai')->first()?->total;
+    $profiles = $profiles->where('profile_periods.stage','=','stage_1')->whereRaw('profile_periods.status IN ("Menunggu Verifikasi","Jadwalkan Kunjungan")');
 }
 
 else if(auth()->can('kecamatan'))
 {
-    // $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
+    $data['totalProfileReceived'] = (clone $query)->whereRaw('profile_periods.stage NOT IN ("stage_1","stage_2")')->first()?->total;
+    $data['totalProfileReady'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Sesuai')->first()?->total;
+    $data['totalProfileNeedToCheck'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
+    $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Belum Sesuai')->first()?->total;
+    $profiles = $profiles->where('profile_periods.stage','=','stage_2')->whereRaw('profile_periods.status <> "Diusulkan"');
+    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
 }
 
 $data['totalProfile'] = $query->first()?->total ?? 0;

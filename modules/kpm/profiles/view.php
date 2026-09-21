@@ -82,4 +82,11 @@ $data->incomes = DB::table('profile_incomes')->select('*')
     ->where('profile_period_id', $data->profile_period_id)
     ->get();
 
+$data->lastStage = DB::table('profile_stages')->select('*')
+    ->where('profile_period_id', $data->profile_period_id)
+    ->orderBy('id','desc')
+    ->first();
+
+$data->lastStage->data = $data->lastStage?->data ? json_decode($data->lastStage->data) : [];
+
 return Response::json(__('data retrieved'), $data);

@@ -20,16 +20,48 @@ if(auth()->can('desa'))
 
     $query = $query->where('profile_periods.region','=',$assigment->region_name)
         ->where('profile_periods.village','=',$assigment->village_name);
+
+    $filter = request()->otherData('filter');
+    if($filter)
+    {
+        $query = $query->where('profile_periods.status','=',$filter)
+        ->where('profile_periods.stage','=','stage_1');
+    }
 }
 
 if(auth()->can('pendamping'))
 {
-    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_1")');
+
+    $filter = request()->otherData('filter');
+    if($filter)
+    {
+        $query = $query->where('profile_periods.status','=',$filter)
+        ->where('profile_periods.stage','=','stage_1');
+    }
+    else
+    {
+        $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai" AND profile_period_id = profile_periods.id))');
+    }
 }
 
 else if(auth()->can('kecamatan'))
 {
-    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
+    $filter = request()->otherData('filter');
+    if($filter)
+    {
+        if($filter == "Sesuai")
+        {
+            $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id AND result IN ("Diajukan","Sesuai")))');
+        }
+        else
+        {
+            $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id AND result = ?))', [$filter]);
+        }
+    }
+    else
+    {
+        $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
+    }
 }
 
 $lists = (new DatabaseService)->listing($query, ['profiles.name','profiles.personal_number','profiles.family_number']);
