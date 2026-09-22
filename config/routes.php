@@ -77,8 +77,18 @@ Route::get('/kpm/profile-administrations', isAuthenticated(), permissionMiddlewa
 }, 'modules/kpm/profiles/index');
 
 Route::get('/kpm/profile-nominatif', isAuthenticated(), permissionMiddleware('kecamatan'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Diusulkan');
+    $request->setOtherData('filter','Diajukan');
 }, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-check', isAuthenticated(), permissionMiddleware('dinsos'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Sesuai');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware('dinsos'), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Sasaran');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profiles/{id}/ajukan', isAuthenticated(), periodActive(), permissionMiddleware('kecamatan'), 'modules/kpm/profiles/ajukan');
 
 Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
 Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');

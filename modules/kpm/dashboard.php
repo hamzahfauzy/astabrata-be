@@ -25,9 +25,25 @@ CONCAT(
 profile_periods.village,
 profile_periods.region,
 profile_periods.stage,
-profile_periods.status
+profile_periods.status,
+stages.name stage_name,
+stages.result stage_result,
+stages.data stage_data
 ')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
+        ->leftJoin('(
+    SELECT *
+    FROM (
+        SELECT
+            h.*,
+            ROW_NUMBER() OVER (
+                PARTITION BY h.profile_period_id
+                ORDER BY h.created_at DESC, h.id DESC
+            ) AS rn
+        FROM profile_stages h
+    ) x
+    WHERE x.rn = 1
+) stages', 'stages.profile_period_id','=','profile_periods.id')
         ->where('profile_periods.period_id','=',$activePeriod->id);
         // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
 
@@ -51,7 +67,7 @@ if(auth()->can('desa'))
         ->where('profile_periods.village','=',$assigment->village_name)->where('profile_periods.stage','=','stage_1');
 }
 
-if(auth()->can('pendamping'))
+else if(auth()->can('pendamping'))
 {
 
     $data['totalProfileVerified'] = (clone $query)->where('profile_periods.stage','<>','stage_1')->first()?->total;
@@ -71,7 +87,24 @@ else if(auth()->can('kecamatan'))
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
 }
 
+else if(auth()->can('dinsos'))
+{
+    $data['totalProfileIn'] = (clone $query)->whereRaw('profile_periods.stage NOT IN ("stage_1","stage_2")')->first()?->total;
+    $data['totalProfileReady'] = (clone $query)->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id)')->first()?->total;
+    $data['totalProfileRevision'] = (clone $query)->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Belum Sesuai" AND profile_period_id = profile_periods.id)')->first()?->total;
+    $data['totalTarget'] = DB::table('profile_periods')->exec('SELECT SUM(CASE WHEN remaining = 0 THEN 1 ELSE 0 END) total_target FROM (SELECT region, COUNT(*) AS total, 4 AS target, GREATEST(4 - COUNT(*), 0) AS remaining FROM profile_periods WHERE period_id = ? GROUP BY region ORDER BY region) target', [$activePeriod->id])->fetchObject()?->total_target;
+    $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
+    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
+}
+
+$profiles = $profiles->get();
+$profiles = array_map(function($profile){
+    $profile->stage_data = json_decode($profile->stage_data);
+    return $profile;
+
+}, $profiles);
+
 $data['totalProfile'] = $query->first()?->total ?? 0;
-$data['profiles'] = $profiles->get();
+$data['profiles'] = $profiles;
 
 return Response::json(__('Data retrieved.'), $data);

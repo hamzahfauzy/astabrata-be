@@ -64,6 +64,26 @@ else if(auth()->can('kecamatan'))
     }
 }
 
+else if(auth()->can('dinsos'))
+{
+    $filter = request()->otherData('filter');
+    if($filter)
+    {
+        if($filter == 'Sasaran')
+        {
+            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND result = "Sesuai" AND profile_period_id = profile_periods.id)');
+        }
+        else
+        {
+            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_period_id = profile_periods.id)');
+        }
+    }
+    else
+    {
+        $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
+    }
+}
+
 $lists = (new DatabaseService)->listing($query, ['profiles.name','profiles.personal_number','profiles.family_number']);
 
 return [
