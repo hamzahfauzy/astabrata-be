@@ -27,13 +27,19 @@ profile_periods.village,
 profile_periods.region,
 profile_periods.stage,
 profile_periods.status,
+profile_periods.created_at period_created,
 stages.name stage_name,
 stages.result stage_result,
 stages.data stage_data
 ')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
         ->leftJoin('profile_assessments','profile_assessments.profile_period_id','=','profile_periods.id')
-        ->leftJoin('(
+        ->where('profile_periods.period_id','=',$activePeriod->id);
+        // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
+
+$data = [];
+
+$stageDataLeftJoin = "(
     SELECT *
     FROM (
         SELECT
@@ -45,11 +51,7 @@ stages.data stage_data
         FROM profile_stages h
     ) x
     WHERE x.rn = 1
-) stages', 'stages.profile_period_id','=','profile_periods.id')
-        ->where('profile_periods.period_id','=',$activePeriod->id);
-        // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
-
-$data = [];
+) stages";
 
 if(auth()->can('*'))
 {
@@ -86,12 +88,26 @@ else if(auth()->can('pendamping'))
 
 else if(auth()->can('kecamatan'))
 {
-    $data['totalProfileReceived'] = (clone $query)->whereRaw('profile_periods.stage NOT IN ("stage_1","stage_2")')->first()?->total;
+    $data['totalProfileReceived'] = (clone $query)->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai"  AND profile_period_id = profile_periods.id)')->first()?->total;
     $data['totalProfileReady'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Sesuai')->first()?->total;
     $data['totalProfileNeedToCheck'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
     $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Belum Sesuai')->first()?->total;
-    $profiles = $profiles->where('profile_periods.stage','=','stage_2')->whereRaw('profile_periods.status <> "Diusulkan"');
+    $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai" AND profile_period_id = profile_periods.id))');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
+
+    $stageDataLeftJoin = "(
+        SELECT *
+        FROM (
+            SELECT
+                h.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY h.profile_period_id
+                    ORDER BY h.created_at DESC, h.id DESC
+                ) AS rn
+            FROM profile_stages h WHERE name IN ('stage_1','stage_2') ORDER BY name DESC
+        ) x
+        WHERE x.rn = 1
+    ) stages";
 }
 
 else if(auth()->can('dinsos'))
@@ -102,6 +118,20 @@ else if(auth()->can('dinsos'))
     $data['totalTarget'] = DB::table('profile_periods')->exec('SELECT SUM(CASE WHEN remaining = 0 THEN 1 ELSE 0 END) total_target FROM (SELECT region, COUNT(*) AS total, 4 AS target, GREATEST(4 - COUNT(*), 0) AS remaining FROM profile_periods WHERE period_id = ? GROUP BY region ORDER BY region) target', [$activePeriod->id])->fetchObject()?->total_target;
     $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
+
+    $stageDataLeftJoin = "(
+        SELECT *
+        FROM (
+            SELECT
+                h.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY h.profile_period_id
+                    ORDER BY h.created_at DESC, h.id DESC
+                ) AS rn
+            FROM profile_stages h WHERE name IN ('stage_2','stage_3') ORDER BY name DESC
+        ) x
+        WHERE x.rn = 1
+    ) stages";
 }
 
 else if(auth()->can('asesor'))
@@ -111,6 +141,20 @@ else if(auth()->can('asesor'))
     $data['totalProfileProcess'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND result = "process" AND profile_period_id = profile_periods.id) )')->first()?->total;
     $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
+
+    $stageDataLeftJoin = "(
+        SELECT *
+        FROM (
+            SELECT
+                h.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY h.profile_period_id
+                    ORDER BY h.created_at DESC, h.id DESC
+                ) AS rn
+            FROM profile_stages h WHERE name IN ('stage_3','stage_4') ORDER BY name DESC
+        ) x
+        WHERE x.rn = 1
+    ) stages";
 }
 
 else if(auth()->can('opd'))
@@ -121,9 +165,23 @@ else if(auth()->can('opd'))
 
     $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_5" AND profile_period_id = profile_periods.id) ) OR profile_periods.stage = "stage_5"');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_5" AND profile_period_id = profile_periods.id) ) OR profile_periods.stage = "stage_5"');
+
+    $stageDataLeftJoin = "(
+        SELECT *
+        FROM (
+            SELECT
+                h.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY h.profile_period_id
+                    ORDER BY h.created_at DESC, h.id DESC
+                ) AS rn
+            FROM profile_stages h WHERE name IN ('stage_5') ORDER BY name DESC
+        ) x
+        WHERE x.rn = 1
+    ) stages";
 }
 
-$profiles = $profiles->get();
+$profiles = $profiles->leftJoin($stageDataLeftJoin, 'stages.profile_period_id','=','profile_periods.id')->get();
 $profiles = array_map(function($profile){
     $profile->stage_data = $profile->stage_data ? json_decode($profile->stage_data) : [];
     return $profile;

@@ -26,7 +26,7 @@ if(auth()->can('desa'))
     {
         if($filter == 'Rekomendasi')
         {
-            $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_8" AND profile_period_id = profile_periods.id)) OR profile_periods.stage = "stage_8"');
+            $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE profile_stages.name = "stage_8" AND profile_stages.profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_8")');
         }
         else
         {
@@ -82,7 +82,7 @@ else if(auth()->can(['dinsos','asesor']))
         }
         else if($filter == 'Assessments')
         {
-            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND profile_period_id = profile_periods.id)');
+            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND result <> "process" AND profile_period_id = profile_periods.id)');
         }
         else
         {
@@ -103,7 +103,7 @@ else if(auth()->can(['opd','pelaksana']))
         $stage = ["Jadwalkan" => "stage_5", "Selesai" => "stage_6"];
         if($filter == "Jadwalkan")
         {
-            $query = $query->whereRaw('profile_periods.stage = "stage_5" AND profile_periods.status = "Dijadwalkan"');
+            $query = $query->whereRaw('profile_periods.stage = "stage_6" AND profile_periods.status = "Menunggu Verifikasi"');
         }
         else
         {

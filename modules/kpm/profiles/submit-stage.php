@@ -6,6 +6,7 @@ use Libraries\Database as DB;
 $data = request()->body();
 $activePeriod = request()->otherData('activePeriod');
 $profileId = request()->params('id');
+$user = auth()->user();
 
 $profilePeriod = DB::table('profile_periods')->where('profile_id','=',$profileId)->where('period_id','=',$activePeriod->id)->first();
 
@@ -18,7 +19,8 @@ $stageData = [
     'profile_period_id' => $profilePeriod->id,
     'name' => $profilePeriod->stage,
     'result' => $data['results'],
-    'data' => json_encode($data)
+    'data' => json_encode($data),
+    'created_by' => $user->id
 ];
 
 if(!$check)
@@ -42,8 +44,7 @@ $stageUpdate = [
 
 if(
     ($profilePeriod->stage == 'stage_1' && in_array($data['results'],['Jadwalkan Kunjungan','Belum Sesuai'])) ||
-    ($profilePeriod->stage == 'stage_2' && $data['results'] != 'Diusulkan') ||
-    ($profilePeriod->stage == 'stage_3' && $data['results'] != 'Memenuhi Kriteria Manidi')
+    ($profilePeriod->stage == 'stage_2' && $data['results'] != 'Diusulkan')
 )
 {
     unset($stageUpdate['stage']);
