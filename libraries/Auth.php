@@ -121,12 +121,22 @@ class Auth
         return !$this->check();
     }
 
-    public function can(string $permission): bool
+    public function can(string|array $permission): bool
     {
         $permissions = $this->permissions();
 
         if (in_array('*', $permissions, true)) {
             return true;
+        }
+
+        if (is_array($permission)) {
+            foreach ($permission as $item) {
+                if ($this->can($item)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         if (in_array($permission, $permissions, true)) {

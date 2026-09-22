@@ -84,11 +84,16 @@ Route::get('/kpm/profile-check', isAuthenticated(), permissionMiddleware('dinsos
     $request->setOtherData('filter','Sesuai');
 }, 'modules/kpm/profiles/index');
 
-Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware('dinsos'), periodActive(), function(\Libraries\Request $request){
+Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware(['dinsos','asesor']), periodActive(), function(\Libraries\Request $request){
     $request->setOtherData('filter','Sasaran');
 }, 'modules/kpm/profiles/index');
 
+Route::get('/kpm/profile-assessments', isAuthenticated(), permissionMiddleware(['dinsos','asesor']), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Assessments');
+}, 'modules/kpm/profiles/index');
+
 Route::get('/kpm/profiles/{id}/ajukan', isAuthenticated(), periodActive(), permissionMiddleware('kecamatan'), 'modules/kpm/profiles/ajukan');
+Route::get('/kpm/profiles/{id}/process', isAuthenticated(), periodActive(), permissionMiddleware(['dinsos','asesor']), 'modules/kpm/profiles/process');
 
 Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
 Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');

@@ -64,7 +64,7 @@ else if(auth()->can('kecamatan'))
     }
 }
 
-else if(auth()->can('dinsos'))
+else if(auth()->can(['dinsos','asesor']))
 {
     $filter = request()->otherData('filter');
     if($filter)
@@ -72,6 +72,10 @@ else if(auth()->can('dinsos'))
         if($filter == 'Sasaran')
         {
             $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND result = "Sesuai" AND profile_period_id = profile_periods.id)');
+        }
+        else if($filter == 'Assessments')
+        {
+            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND profile_period_id = profile_periods.id)');
         }
         else
         {

@@ -100,11 +100,11 @@ function can($permission)
 
 function permissionMiddleware($permission)
 {
-    return function(Request $request) use ($permission){
-        if(!auth()->can($permission))
-        {
+    return function(Request $request) use ($permission) {
+
+        if (!auth()->can($permission)) {
             throw new UnauthorizedException([
-                'message' => ' Unauthorized'
+                'message' => 'Unauthorized'
             ]);
         }
 

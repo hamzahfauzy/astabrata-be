@@ -40,12 +40,11 @@ $stageUpdate = [
     'last_stage_result' => $data['results']
 ];
 
-if($profilePeriod->stage == 'stage_1' && in_array($data['results'],['Jadwalkan Kunjungan','Belum Sesuai']))
-{
-    unset($stageUpdate['stage']);
-    $stageUpdate['status'] = $data['results'];
-}
-else if($profilePeriod->stage == 'stage_2' && $data['results'] != 'Diusulkan')
+if(
+    ($profilePeriod->stage == 'stage_1' && in_array($data['results'],['Jadwalkan Kunjungan','Belum Sesuai'])) ||
+    ($profilePeriod->stage == 'stage_2' && $data['results'] != 'Diusulkan') ||
+    ($profilePeriod->stage == 'stage_3' && $data['results'] != 'Memenuhi Kriteria Manidi')
+)
 {
     unset($stageUpdate['stage']);
     $stageUpdate['status'] = $data['results'];

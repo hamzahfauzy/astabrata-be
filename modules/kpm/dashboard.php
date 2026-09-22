@@ -22,6 +22,7 @@ CONCAT(
     "********",
     RIGHT(family_number, 4)
 ) AS family_number,
+profile_assessments.assessor_name,
 profile_periods.village,
 profile_periods.region,
 profile_periods.stage,
@@ -31,6 +32,7 @@ stages.result stage_result,
 stages.data stage_data
 ')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
+        ->leftJoin('profile_assessments','profile_assessments.profile_period_id','=','profile_periods.id')
         ->leftJoin('(
     SELECT *
     FROM (
@@ -97,9 +99,19 @@ else if(auth()->can('dinsos'))
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
 }
 
+else if(auth()->can('asesor'))
+{
+    $data['totalProfileFinish'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND profile_period_id = profile_periods.id) )')->first()?->total;
+    $data['totalProfileReady'] = (clone $query)->whereRaw('profile_periods.stage = "stage_3"')->first()?->total;
+    $data['totalProfileProcess'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND result = "process" AND profile_period_id = profile_periods.id) )')->first()?->total;
+    $data['totalTarget'] = DB::table('profile_periods')->exec('SELECT SUM(CASE WHEN remaining = 0 THEN 1 ELSE 0 END) total_target FROM (SELECT region, COUNT(*) AS total, 4 AS target, GREATEST(4 - COUNT(*), 0) AS remaining FROM profile_periods WHERE period_id = ? GROUP BY region ORDER BY region) target', [$activePeriod->id])->fetchObject()?->total_target;
+    $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
+    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
+}
+
 $profiles = $profiles->get();
 $profiles = array_map(function($profile){
-    $profile->stage_data = json_decode($profile->stage_data);
+    $profile->stage_data = $profile->stage_data ? json_decode($profile->stage_data) : [];
     return $profile;
 
 }, $profiles);
