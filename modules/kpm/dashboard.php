@@ -104,9 +104,18 @@ else if(auth()->can('asesor'))
     $data['totalProfileFinish'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND profile_period_id = profile_periods.id) )')->first()?->total;
     $data['totalProfileReady'] = (clone $query)->whereRaw('profile_periods.stage = "stage_3"')->first()?->total;
     $data['totalProfileProcess'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND result = "process" AND profile_period_id = profile_periods.id) )')->first()?->total;
-    $data['totalTarget'] = DB::table('profile_periods')->exec('SELECT SUM(CASE WHEN remaining = 0 THEN 1 ELSE 0 END) total_target FROM (SELECT region, COUNT(*) AS total, 4 AS target, GREATEST(4 - COUNT(*), 0) AS remaining FROM profile_periods WHERE period_id = ? GROUP BY region ORDER BY region) target', [$activePeriod->id])->fetchObject()?->total_target;
     $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_3" AND profile_stages.result = "Sesuai" AND profile_period_id = profile_periods.id) )');
+}
+
+else if(auth()->can('opd'))
+{
+    $data['totalProfileScheduled'] = (clone $query)->whereRaw('profile_periods.stage = "stage_5" AND profile_periods.status = "Dijadwalkan"')->first()?->total;
+    $data['totalProfileNeedCheck'] = (clone $query)->whereRaw('profile_periods.stage = "stage_5" AND profile_periods.status = "Menunggu Verifikasi"')->first()?->total;
+    $data['totalProfileDone'] = (clone $query)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_5" AND profile_period_id = profile_periods.id) )')->first()?->total;
+
+    $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_5" AND profile_period_id = profile_periods.id) ) OR profile_periods.stage = "stage_5"');
+    $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_5" AND profile_period_id = profile_periods.id) ) OR profile_periods.stage = "stage_5"');
 }
 
 $profiles = $profiles->get();

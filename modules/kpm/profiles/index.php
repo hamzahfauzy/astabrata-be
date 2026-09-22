@@ -5,7 +5,7 @@ use Libraries\Services\DatabaseService;
 
 $user = auth()->user();
 $activePeriod = request()->otherData('activePeriod');
-$query = DB::table('profiles')->select('profiles.*')
+$query = DB::table('profiles')->select('profiles.*, profile_periods.stage, profile_periods.status')
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
         ->where('profile_periods.period_id','=',$activePeriod->id);
         // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
@@ -85,6 +85,27 @@ else if(auth()->can(['dinsos','asesor']))
     else
     {
         $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_stages.result = "Diajukan" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_3")');
+    }
+}
+
+else if(auth()->can(['opd']))
+{
+    $filter = request()->otherData('filter');
+    if($filter)
+    {
+        $stage = ["Jadwalkan" => "stage_5", "Selesai" => "stage_6"];
+        if($filter == "Jadwalkan")
+        {
+            $query = $query->whereRaw('profile_periods.stage = "stage_5" AND profile_periods.status = "Dijadwalkan"');
+        }
+        else
+        {
+            $query = $query->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "'.$stage[$filter].'" AND result = "'.$filter.'" AND profile_period_id = profile_periods.id)');
+        }
+    }
+    else
+    {
+        $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_4" AND profile_stages.result = "Memenuhi Kriteria Mandiri" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_5")');
     }
 }
 

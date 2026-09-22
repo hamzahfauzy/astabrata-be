@@ -92,6 +92,14 @@ Route::get('/kpm/profile-assessments', isAuthenticated(), permissionMiddleware([
     $request->setOtherData('filter','Assessments');
 }, 'modules/kpm/profiles/index');
 
+Route::get('/kpm/profile-intervence-schedules', isAuthenticated(), permissionMiddleware(['opd']), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Jadwalkan');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-implementations', isAuthenticated(), permissionMiddleware(['opd']), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Selesai');
+}, 'modules/kpm/profiles/index');
+
 Route::get('/kpm/profiles/{id}/ajukan', isAuthenticated(), periodActive(), permissionMiddleware('kecamatan'), 'modules/kpm/profiles/ajukan');
 Route::get('/kpm/profiles/{id}/process', isAuthenticated(), periodActive(), permissionMiddleware(['dinsos','asesor']), 'modules/kpm/profiles/process');
 
