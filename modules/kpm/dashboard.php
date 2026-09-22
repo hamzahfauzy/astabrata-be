@@ -51,7 +51,12 @@ stages.data stage_data
 
 $data = [];
 
-if(auth()->can('desa'))
+if(auth()->can('*'))
+{
+
+}
+
+else if(auth()->can('desa'))
 {
     $assigment = DB::table('user_assignment')
         ->select('user_assignment.*, villages.name village_name, regions.name region_name')

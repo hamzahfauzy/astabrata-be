@@ -87,6 +87,9 @@ $data->lastStage = DB::table('profile_stages')->select('*')
     ->orderBy('id','desc')
     ->first();
 
-$data->lastStage->data = $data->lastStage?->data ? json_decode($data->lastStage->data) : [];
+if($data->lastStage)
+{
+    $data->lastStage->data = $data->lastStage?->data ? json_decode($data->lastStage->data) : [];
+}
 
 return Response::json(__('data retrieved'), $data);

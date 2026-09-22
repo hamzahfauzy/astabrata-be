@@ -96,8 +96,12 @@ Route::get('/kpm/profile-intervence-schedules', isAuthenticated(), permissionMid
     $request->setOtherData('filter','Jadwalkan');
 }, 'modules/kpm/profiles/index');
 
-Route::get('/kpm/profile-implementations', isAuthenticated(), permissionMiddleware(['opd']), periodActive(), function(\Libraries\Request $request){
+Route::get('/kpm/profile-implementations', isAuthenticated(), permissionMiddleware(['opd','pelaksana']), periodActive(), function(\Libraries\Request $request){
     $request->setOtherData('filter','Selesai');
+}, 'modules/kpm/profiles/index');
+
+Route::get('/kpm/profile-recommendations', isAuthenticated(), permissionMiddleware(['desa']), periodActive(), function(\Libraries\Request $request){
+    $request->setOtherData('filter','Rekomendasi');
 }, 'modules/kpm/profiles/index');
 
 Route::get('/kpm/profiles/{id}/ajukan', isAuthenticated(), periodActive(), permissionMiddleware('kecamatan'), 'modules/kpm/profiles/ajukan');

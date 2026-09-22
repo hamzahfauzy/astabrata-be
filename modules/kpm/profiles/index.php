@@ -24,8 +24,15 @@ if(auth()->can('desa'))
     $filter = request()->otherData('filter');
     if($filter)
     {
-        $query = $query->where('profile_periods.status','=',$filter)
-        ->where('profile_periods.stage','=','stage_1');
+        if($filter == 'Rekomendasi')
+        {
+            $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_8" AND profile_period_id = profile_periods.id)) OR profile_periods.stage = "stage_8"');
+        }
+        else
+        {
+            $query = $query->where('profile_periods.status','=',$filter)
+            ->where('profile_periods.stage','=','stage_1');
+        }
     }
 }
 
@@ -88,7 +95,7 @@ else if(auth()->can(['dinsos','asesor']))
     }
 }
 
-else if(auth()->can(['opd']))
+else if(auth()->can(['opd','pelaksana']))
 {
     $filter = request()->otherData('filter');
     if($filter)
