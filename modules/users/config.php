@@ -74,15 +74,6 @@ return [
                 ]);
             }
 
-            if(isset($payload['village_id']) && $payload['village_id'])
-            {
-                DB::table('user_assignment')->insert([
-                    'user_id' => $id,
-                    'model_id' => $payload['village_id'],
-                    'model_name' => 'villages'
-                ]);
-            }
-
             return Response::json(__('create data success'), $data);
         },
 
