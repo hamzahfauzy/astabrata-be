@@ -88,11 +88,18 @@ else if(auth()->can('pendamping'))
 
 else if(auth()->can('kecamatan'))
 {
+    $assigment = DB::table('user_assignment')
+        ->select('user_assignment.*, regions.name region_name')
+        ->leftJoin('regions','regions.id','=','user_assignment.model_id')
+        ->where('user_id','=',$user->id)->first();
+
+    $query = $query->where('profile_periods.region','=',$assigment->region_name);
+
     $data['totalProfileReceived'] = (clone $query)->whereRaw('EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai"  AND profile_period_id = profile_periods.id)')->first()?->total;
     $data['totalProfileReady'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Sesuai')->first()?->total;
     $data['totalProfileNeedToCheck'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Menunggu Verifikasi')->first()?->total;
     $data['totalProfileRevision'] = (clone $query)->where('profile_periods.stage','=','stage_2')->where('profile_periods.status','=','Belum Sesuai')->first()?->total;
-    $profiles = $profiles->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai" AND profile_period_id = profile_periods.id))');
+    $profiles = $profiles->where('profile_periods.region','=',$assigment->region_name)->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_1" AND result = "Sesuai" AND profile_period_id = profile_periods.id))');
     $query = $query->whereRaw('(EXISTS (SELECT 1 FROM profile_stages WHERE name = "stage_2" AND profile_period_id = profile_periods.id) OR profile_periods.stage = "stage_2")');
 
     $stageDataLeftJoin = "(

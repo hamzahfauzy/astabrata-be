@@ -80,6 +80,8 @@ function isAuthenticated()
             ->leftJoin('instances','instances.id','=','user_assignment.model_id AND user_assignment.model_name = "instances"')
             ->where('user_id','=',$user->id)->first();
 
+        $user->assignment_display = $user->assignment->user_assignment_name;
+
         $request->setUser($user);
     };
 }
