@@ -9,8 +9,11 @@ $query = DB::table('profiles')->select('profiles.*, profile_periods.stage, profi
         ->leftJoin('profile_periods','profile_periods.profile_id','=','profiles.id')
         ->where('profile_periods.period_id','=',$activePeriod->id);
         // ->leftJoin('profile_stages','profile_stages.profile_period_id','=','profile_periods.id')
+if(auth()->can('*'))
+{
 
-if(auth()->can('desa'))
+}
+else if(auth()->can('desa'))
 {
     $assigment = DB::table('user_assignment')
         ->select('user_assignment.*, villages.name village_name, regions.name region_name')
@@ -35,8 +38,7 @@ if(auth()->can('desa'))
         }
     }
 }
-
-if(auth()->can('pendamping'))
+else if(auth()->can('pendamping'))
 {
 
     $filter = request()->otherData('filter');
