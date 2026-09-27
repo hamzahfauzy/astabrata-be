@@ -130,6 +130,16 @@ return [
             $data->roles = array_map(function($p){ return $p->id; }, $role_data);
             $data->role_data = $role_data;
 
+            $data->assignment = DB::table('user_assignment')
+                ->select('user_assignment.*, CASE WHEN model_name = "villages" THEN villages.name WHEN model_name = "regions" THEN regions.name WHEN model_name = "instances" THEN instances.name END user_assignment_name, rg.name region_name')
+                ->leftJoin('villages','villages.id','=','user_assignment.model_id AND user_assignment.model_name = "villages"')
+                ->leftJoin('regions','regions.id','=','user_assignment.model_id AND user_assignment.model_name = "regions"')
+                ->leftJoin('regions rg','rg.id','=','villages.region_id AND user_assignment.model_name = "villages"')
+                ->leftJoin('instances','instances.id','=','user_assignment.model_id AND user_assignment.model_name = "instances"')
+                ->where('user_id','=',$data->id)->first();
+
+            $data->assignment_display = $data->assignment?->user_assignment_name;
+
             return Response::json(__('data retrieved'), $data);
         }
         // 'index' => 'modules/users/index'
