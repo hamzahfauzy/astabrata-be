@@ -30,7 +30,12 @@ return [
             $roles = $payload['roles'];
             unset($payload['roles']);
 
-            $id = DB::table($config['table'])->insert($payload);
+            $userData = $payload;
+            unset($userData['instance_id']);
+            unset($userData['village_id']);
+            unset($userData['region_id']);
+
+            $id = DB::table($config['table'])->insert($userData);
 
             foreach($roles as $role)
             {
