@@ -43,6 +43,40 @@ return [
             
             $data = DB::table($config['table'])->where('id', $id)->first();
 
+            if(isset($payload['instance_id']) && $payload['instance_id'])
+            {
+                DB::table('user_assignment')->insert([
+                    'user_id' => $id,
+                    'model_id' => $payload['instance_id'],
+                    'model_name' => 'instances'
+                ]);
+            }
+            else if(isset($payload['village_id']) && $payload['village_id'])
+            {
+                DB::table('user_assignment')->insert([
+                    'user_id' => $id,
+                    'model_id' => $payload['village_id'],
+                    'model_name' => 'villages'
+                ]);
+            }
+            else if(isset($payload['region_id']) && $payload['region_id'])
+            {
+                DB::table('user_assignment')->insert([
+                    'user_id' => $id,
+                    'model_id' => $payload['region_id'],
+                    'model_name' => 'regions'
+                ]);
+            }
+
+            if(isset($payload['village_id']) && $payload['village_id'])
+            {
+                DB::table('user_assignment')->insert([
+                    'user_id' => $id,
+                    'model_id' => $payload['village_id'],
+                    'model_name' => 'villages'
+                ]);
+            }
+
             return Response::json(__('create data success'), $data);
         },
 

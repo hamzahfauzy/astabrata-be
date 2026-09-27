@@ -46,6 +46,7 @@ Route::crud('/permissions', 'modules/permissions/config', 'permissions.', isAuth
 Route::crud('/users', 'modules/users/config', 'users.', isAuthenticated());
 
 Route::get('/villages/find-by-region-name/{name}', isAuthenticated(), 'modules/master/villages/find-by-region-name');
+Route::get('/villages/find-by-region-id/{id}', isAuthenticated(), 'modules/master/villages/find-by-region-id');
 
 Route::get('/regions/get', isAuthenticated(), 'modules/master/regions/get');
 Route::get('/educations/get', isAuthenticated(), 'modules/master/educations/get');

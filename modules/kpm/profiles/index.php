@@ -53,6 +53,13 @@ if(auth()->can('pendamping'))
 
 else if(auth()->can('kecamatan'))
 {
+    $assigment = DB::table('user_assignment')
+        ->select('user_assignment.*, regions.name region_name')
+        ->leftJoin('regions','regions.id','=','user_assignment.model_id')
+        ->where('user_id','=',$user->id)->first();
+
+    $query = $query->where('profile_periods.region','=',$assigment->region_name);
+
     $filter = request()->otherData('filter');
     if($filter)
     {
