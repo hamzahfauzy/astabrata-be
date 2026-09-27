@@ -49,7 +49,7 @@ return [
             
             $data = DB::table($config['table'])->where('id', $id)->first();
 
-            if(isset($payload['instance_id']) && $payload['instance_id'])
+            if(isset($payload['instance_id']) && $payload['instance_id'] && $payload['instance_id']!='Choose')
             {
                 DB::table('user_assignment')->insert([
                     'user_id' => $id,
@@ -57,7 +57,7 @@ return [
                     'model_name' => 'instances'
                 ]);
             }
-            else if(isset($payload['village_id']) && $payload['village_id'])
+            else if(isset($payload['village_id']) && $payload['village_id'] && $payload['village_id']!='Choose')
             {
                 DB::table('user_assignment')->insert([
                     'user_id' => $id,
@@ -65,7 +65,7 @@ return [
                     'model_name' => 'villages'
                 ]);
             }
-            else if(isset($payload['region_id']) && $payload['region_id'])
+            else if(isset($payload['region_id']) && $payload['region_id'] && $payload['region_id']!='Choose')
             {
                 DB::table('user_assignment')->insert([
                     'user_id' => $id,
