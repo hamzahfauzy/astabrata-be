@@ -84,11 +84,11 @@ Route::get('/kpm/profile-check', isAuthenticated(), permissionMiddleware('dinsos
     $request->setOtherData('filter','Sesuai');
 }, 'modules/kpm/profiles/index');
 
-Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware(['dinsos','asesor']), periodActive(), function(\Libraries\Request $request){
+Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware(['dinsos','asesor','kabupaten']), periodActive(), function(\Libraries\Request $request){
     $request->setOtherData('filter','Sasaran');
 }, 'modules/kpm/profiles/index');
 
-Route::get('/kpm/profile-assessments', isAuthenticated(), permissionMiddleware(['dinsos','asesor']), periodActive(), function(\Libraries\Request $request){
+Route::get('/kpm/profile-assessments', isAuthenticated(), permissionMiddleware(['dinsos','asesor','kabupaten']), periodActive(), function(\Libraries\Request $request){
     $request->setOtherData('filter','Assessments');
 }, 'modules/kpm/profiles/index');
 
