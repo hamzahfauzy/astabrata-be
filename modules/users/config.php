@@ -34,6 +34,7 @@ return [
             unset($userData['instance_id']);
             unset($userData['village_id']);
             unset($userData['region_id']);
+            unset($userData['model_id']);
 
             $id = DB::table($config['table'])->insert($userData);
 
