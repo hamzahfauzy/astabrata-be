@@ -61,4 +61,44 @@ Route.add('/roles/:id', 'views/layouts/app', isAuthenticated, () => {
 }, ['RoleController','show'])
 
 
+// Master Periods
+Route.add('/master/periods', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Periode'
+}, ['Master/PeriodController','index'])
+
+Route.add('/master/periods/create', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Input Data Periode'
+}, ['Master/PeriodController','create'])
+
+Route.add('/master/periods/:id/edit', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Edit Periode'
+}, ['Master/PeriodController','edit'])
+
+// Master Instances
+Route.add('/master/instances', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Instansi'
+}, ['Master/InstanceController','index'])
+
+Route.add('/master/instances/create', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Input Data Instansi'
+}, ['Master/InstanceController','create'])
+
+Route.add('/master/instances/:id/edit', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Edit Instansi'
+}, ['Master/InstanceController','edit'])
+
+// Master Assignment
+Route.add('/master/assignments', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Penugasan'
+}, ['Master/AssignmentController','index'])
+
+Route.add('/master/assignments/create', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Input Data Penugasan'
+}, ['Master/AssignmentController','create'])
+
+Route.add('/master/assignments/:id/edit', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Edit Penugasan'
+}, ['Master/AssignmentController','edit'])
+
+
 export default Route.getRoutes();

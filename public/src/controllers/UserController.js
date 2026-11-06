@@ -128,11 +128,11 @@ export default class UserController extends CrudController {
                 {name: 'username', label: 'Username', type: 'text', required: true},
                 {name: 'password', label: 'Kata Sandi', type: 'password', required: true},
                 {name: 'is_active', label: 'Status', type: 'select', options: [
-                    {label: 'Active', value: 1},
-                    {label: 'Not Active', value: 0},
+                    {label: 'Aktif', value: 1},
+                    {label: 'Tidak Aktif', value: 0},
                 ], required: true},
                 {
-                    name: 'roles', label: 'RolePerans', 
+                    name: 'roles', label: 'Peran', 
                     type: 'checkbox',
                     options: [],
                     ajax: {
@@ -147,7 +147,7 @@ export default class UserController extends CrudController {
             title: 'Edit Pengguna',
             subtitle: 'Ubah data pada form untuk mengedit pengguna',
             breadcrumbs: [
-                {label: 'Penggun', route: '/users'}
+                {label: 'Pengguna', route: '/users'}
             ],
             fields: [
                 {name: 'name', label: 'Nama', type: 'text', required: true},
@@ -155,8 +155,8 @@ export default class UserController extends CrudController {
                 {name: 'username', label: 'Username', type: 'text', required: true},
                 {name: 'password', label: 'Kata Sandi', type: 'password', required: true},
                 {name: 'is_active', label: 'Status', type: 'select', options: [
-                    {label: 'Active', value: 1},
-                    {label: 'Not Active', value: 0},
+                    {label: 'Aktif', value: 1},
+                    {label: 'Tidak Aktif', value: 0},
                 ], required: true},
                 {
                     name: 'roles', label: 'Peran', 

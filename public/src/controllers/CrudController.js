@@ -87,8 +87,8 @@ export class CrudController {
                 const id = el.dataset.rowid
                 
                 Swal.fire({
-                    title: "Are you sure to delete this data?",
-                    text: "You won't be able to revert this!",
+                    title: "Apakah kamu yakin akan menghapus data ini?",
+                    text: "Tindakan ini tidak bisa dikembalikan!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Yes",
@@ -97,7 +97,7 @@ export class CrudController {
                     if (result.isConfirmed)
                     {
                         await ctx.http.delete(ctx.state.endpoint + '/' + id)
-                        Swal.fire("Data deleted!", "", "success");
+                        Swal.fire("Data berhasil dihapus!", "", "success");
                         this.loadData(ctx)
                     }
                 });
@@ -142,7 +142,7 @@ export class CrudController {
 
                 await ctx.http.post(ctx.state.endpoint, formData)
 
-                ctx.flash("success", "Data created.");
+                ctx.flash("success", "Data Berhasil Disimpan.");
 
                 ctx.redirect(this.config.baseUrl)
 
@@ -168,7 +168,7 @@ export class CrudController {
 
                 await ctx.http.put(ctx.state.endpoint + '/' + ctx.params.id, formData)
 
-                ctx.flash("success", "Data updated.");
+                ctx.flash("success", "Data Berhasi Diperbaharui.");
 
                 ctx.redirect(this.config.baseUrl)
 

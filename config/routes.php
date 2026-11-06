@@ -42,3 +42,15 @@ Route::get('/dashboard', isAuthenticated(), 'modules/dashboard');
 Route::crud('/roles', 'modules/roles/config', 'roles.', isAuthenticated());
 Route::crud('/permissions', 'modules/permissions/config', 'permissions.', isAuthenticated());
 Route::crud('/users', 'modules/users/config', 'users.', isAuthenticated());
+
+// master
+Route::get('/master/instances/get', isAuthenticated(), permissionMiddleware('instances.index'), [\App\Master\InstanceController::class, 'get']);
+
+Route::crud('/master/instances', [\App\Master\InstanceController::class, 'config'], 'instances.', isAuthenticated());
+Route::crud('/master/periods', [\App\Master\PeriodController::class, 'config'], 'periods.', isAuthenticated());
+Route::crud('/master/assignments', [\App\Master\AssignmentController::class, 'config'], 'assignments.', isAuthenticated());
+
+Route::get('/master/villages/find-by-region-name/{name}', isAuthenticated(), permissionMiddleware('villages.index'), [\App\Master\VillageController::class, 'findByRegionName']);
+Route::get('/master/villages/find-by-region-id/{id}', isAuthenticated(), permissionMiddleware('villages.index'), [\App\Master\VillageController::class, 'findByRegionId']);
+
+Route::get('/master/regions', isAuthenticated(), permissionMiddleware('regions.index'), [\App\Master\RegionController::class, 'get']);
