@@ -1,0 +1,501 @@
+<style>
+    :root {
+        --bg-canvas: #f1f5f9;
+        --text-title: #0f172a;
+        --text-muted: #64748b;
+        --card-radius: 12px;
+        --green-primary: #15803d;
+        --green-bg: #dcfce7;
+        --blue-primary: #2563eb;
+        --blue-bg: #dbeafe;
+        --amber-primary: #d97706;
+        --amber-bg: #fef3c7;
+        --red-primary: #dc2626;
+        --red-bg: #fee2e2;
+    }
+
+    /* Custom Cards */
+    .dashboard-card {
+        background: #ffffff;
+        border-radius: var(--card-radius);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        padding: 1.25rem;
+    }
+
+    /* Top Metric Cards */
+    .metric-icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .metric-title {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+    .metric-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text-title);
+    }
+
+    /* Workflow Stepper */
+    .stepper-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin-top: 0.5rem;
+    }
+    .step-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 2;
+        background: #fff;
+        padding: 0 0.5rem;
+    }
+    .step-number {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+    .step-number.completed {
+        background-color: #16a34a;
+        color: white;
+    }
+    .step-number.active {
+        background-color: var(--blue-primary);
+        color: white;
+    }
+    .step-number.inactive {
+        background-color: #e2e8f0;
+        color: #64748b;
+    }
+    .step-label {
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    .step-label.active-green { color: #16a34a; }
+    .step-label.active-blue { color: var(--blue-primary); }
+    .step-label.inactive { color: #475569; }
+
+    .step-line {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #e2e8f0;
+        margin: 0 0.5rem;
+    }
+    .step-line.active {
+        background-color: #16a34a;
+    }
+
+    /* Table Styling */
+    .custom-table {
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+    .custom-table th {
+        color: #475569;
+        font-weight: 600;
+        font-size: 0.825rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0.85rem 0.75rem;
+    }
+    .custom-table td {
+        font-size: 0.875rem;
+        padding: 1rem 0.75rem;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 0.35em 0.75em;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+    .badge-success-soft {
+        background-color: var(--green-bg);
+        color: var(--green-primary);
+    }
+    .badge-warning-soft {
+        background-color: var(--amber-bg);
+        color: var(--amber-primary);
+    }
+    .badge-info-soft {
+        background-color: var(--blue-bg);
+        color: var(--blue-primary);
+    }
+    .badge-danger-soft {
+        background-color: var(--red-bg);
+        color: var(--red-primary);
+    }
+
+    /* Progress Bar */
+    .custom-progress {
+        height: 6px;
+        border-radius: 4px;
+        background-color: #e2e8f0;
+    }
+
+    /* Action Buttons */
+    .btn-action-outline {
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+        background: transparent;
+        border-radius: 6px;
+        padding: 0.25rem 1rem;
+        font-size: 0.825rem;
+        font-weight: 500;
+    }
+    .btn-action-outline:hover {
+        background-color: #eff6ff;
+    }
+    .btn-action-blue {
+        background-color: var(--blue-primary);
+        color: white;
+        border-radius: 6px;
+        padding: 0.25rem 1rem;
+        font-size: 0.825rem;
+        font-weight: 500;
+        border: none;
+    }
+    .btn-action-blue:hover {
+        background-color: #1d4ed8;
+        color: white;
+    }
+    .btn-action-red {
+        background-color: var(--red-primary);
+        color: white;
+        border-radius: 6px;
+        padding: 0.25rem 1rem;
+        font-size: 0.825rem;
+        font-weight: 500;
+        border: none;
+    }
+    .btn-action-red:hover {
+        background-color: #b91c1c;
+        color: white;
+    }
+
+    /* Search Input */
+    .search-box {
+        position: relative;
+    }
+    .search-box i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+    .search-box input {
+        padding-left: 36px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        font-size: 0.875rem;
+    }
+
+    /* Document List */
+    .doc-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: #334155;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .doc-item i {
+        color: #64748b;
+        font-size: 1.1rem;
+    }
+
+    /* Banner Alert */
+    .info-banner {
+        background-color: #dbeafe;
+        border-radius: 10px;
+        padding: 0.85rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #1e40af;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .info-banner i {
+        font-size: 1.25rem;
+        background: #2563eb;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-add-kpm {
+        background-color: var(--green-primary);
+        color: white;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        border: none;
+    }
+    .btn-add-kpm:hover {
+        background-color: #166534;
+        color: white;
+    }
+</style>
+
+<div class="container-fluid p-0">
+        
+    <!-- Header Page -->
+    <div class="mb-4">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">Beranda Desa/Kelurahan</h3>
+        <p class="text-muted mb-0" style="font-size: 0.9rem;">
+            Kelola profil awal KPM potensial graduasi hasil penelusuran lapangan di wilayah Desa/Kelurahan.
+        </p>
+    </div>
+
+    <!-- Top Metric Cards -->
+    <div class="row g-3 mb-4">
+        <!-- Card 1 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="dashboard-card d-flex align-items-center gap-3">
+                <div class="metric-icon-box" style="background-color: var(--blue-bg); color: var(--blue-primary);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <div class="metric-title">Total Profil</div>
+                    <div class="metric-value">{{data.totalProfile}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="dashboard-card d-flex align-items-center gap-3">
+                <div class="metric-icon-box" style="background-color: #f1f5f9; color: #64748b;">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+                <div>
+                    <div class="metric-title">Draf</div>
+                    <div class="metric-value">{{data.totalProfileDraft}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="dashboard-card d-flex align-items-center gap-3">
+                <div class="metric-icon-box" style="background-color: var(--amber-bg); color: var(--amber-primary);">
+                    <i class="bi bi-clock-fill"></i>
+                </div>
+                <div>
+                    <div class="metric-title">Menunggu Verifikasi</div>
+                    <div class="metric-value">{{data.totalProfileWait}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="dashboard-card d-flex align-items-center gap-3">
+                <div class="metric-icon-box" style="background-color: var(--red-bg); color: var(--red-primary);">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <div class="metric-title">Perlu Perbaikan</div>
+                    <div class="metric-value">{{data.totalProfileRevision}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alur Pengusulan Section -->
+    <div class="dashboard-card mb-4">
+        <h6 class="fw-bold mb-3" style="color: #0f172a;">Alur Pengusulan</h6>
+        <div class="stepper-container flex-column flex-md-row gap-3 gap-md-0">
+            <div class="step-item">
+                <div class="step-number completed">1</div>
+                <span class="step-label active-green">Penelusuran</span>
+            </div>
+            <div class="step-line active d-none d-md-block"></div>
+            
+            <div class="step-item">
+                <div class="step-number active">2</div>
+                <span class="step-label active-blue">Input Profil</span>
+            </div>
+            <div class="step-line d-none d-md-block"></div>
+
+            <div class="step-item">
+                <div class="step-number inactive">3</div>
+                <span class="step-label inactive">Kirim Verifikasi</span>
+            </div>
+            <div class="step-line d-none d-md-block"></div>
+
+            <div class="step-item">
+                <div class="step-number inactive">4</div>
+                <span class="step-label inactive">Perbaikan Data</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="row g-4">
+        
+        <!-- Left Column: Table (approx 75% width on desktop) -->
+        <div class="col-12 col-lg-9">
+            <div class="dashboard-card">
+                <!-- Table Header & Action -->
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
+                    <h6 class="fw-bold mb-0" style="color: #0f172a;">Daftar Profil Awal KPM Potensial Graduasi</h6>
+                    <a href="/kpm/profiles/create" class="btn btn-add-kpm d-flex align-items-center justify-content-center gap-2" router-link>
+                        <i class="bi bi-plus-lg"></i> Tambah Profil KPM
+                    </a>
+                </div>
+
+                <!-- Search Input -->
+                <div class="search-box mb-3">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Cari nama, NIK, atau ID KPM" onkeyup="filterTable()">
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-responsive">
+                    <table class="table custom-table" id="kpmTable">
+                        <thead>
+                            <tr>
+                                <th>ID KPM</th>
+                                <th>Nama KPM</th>
+                                <th>NIK</th>
+                                <th>Desa/Kelurahan</th>
+                                <th>Status</th>
+                                <!-- <th style="min-width: 110px;">Kelengkapan</th> -->
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                             @for(const profile of data.profiles)
+                            <tr>
+                                <td class="fw-medium">AST-DS-{{profile.id}}</td>
+                                <td class="fw-bold">{{profile.name}}</td>
+                                <td>{{profile.personal_number}}</td>
+                                <td>{{profile.village}}</td>
+                                <td>
+                                    @if(profile.stage == 'stage_1')
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <span class="status-badge badge-warning-soft">Menunggu Verifikasi</span>
+                                    @elseif(profile.status == 'Draft')
+                                    <span class="status-badge badge-info-soft">Draf</span>
+                                    @elseif(profile.status == 'Belum Sesuai')
+                                    <span class="status-badge badge-danger-soft">Perlu Perbaikan</span>
+                                    @endif
+                                    @else
+                                    <span class="status-badge badge-success-soft">Sudah Verifikasi</span>
+                                    @endif
+                                </td>
+                                <!-- <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="small fw-semibold">100%</span>
+                                    </div>
+                                    <div class="progress custom-progress mt-1">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td> -->
+                                <td class="text-center">
+                                    @if(profile.stage == 'stage_1')
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-outline">Lihat</a>
+                                    @elseif(profile.status == 'Draft')
+                                    <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-blue">Lengkapi</a>
+                                    @elseif(profile.status == 'Belum Sesuai')
+                                    <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-red">Perbaiki</a>
+                                    @endif
+                                    @else
+                                    -
+                                    @endif
+                                </td>
+                            </tr>
+                            @endfor
+
+                            @if(data.profiles.length == 0)
+                            <tr>
+                                <td colspan="6">
+                                    <div class="p-3 text-center">
+                                        <i>Tidak ada data</i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Document List (approx 25% width on desktop) -->
+        <div class="col-12 col-lg-3">
+            <div class="dashboard-card">
+                <h6 class="fw-bold mb-3" style="color: #0f172a;">Dokumen Wajib</h6>
+                <div class="d-flex flex-column gap-1">
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>KTP</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>KK</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Foto KPM</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Foto Rumah/Usaha</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Geotag</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Surat Usulan</span>
+                    </div>
+                    <div class="doc-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>RAB UEP (jika diusulkan)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Information Banner -->
+    <div class="mt-4">
+        <div class="info-banner">
+            <i class="bi bi-info font-bold"></i>
+            <div>
+                Profil berasal dari hasil penelusuran lapangan Desa/Kelurahan. Data dikirim kepada Pendamping PKH/TKSK untuk diverifikasi.
+            </div>
+        </div>
+    </div>
+
+</div>

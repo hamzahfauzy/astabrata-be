@@ -1,0 +1,471 @@
+
+<style>
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        background-color: #ffffff;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        border-radius: 12px;
+        padding: 18px 20px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .stat-icon.blue { background-color: #eff6ff; color: #2563eb; }
+    .stat-icon.red { background-color: #fef2f2; color: #ef4444; }
+    .stat-icon.green { background-color: #f0fdf4; color: #16a34a; }
+
+    /* Flow Stepper */
+    .stepper-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        padding: 10px 20px;
+    }
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 2;
+        text-align: center;
+    }
+    .step-number {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #2563eb;
+        color: white;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+    .step-title {
+        font-size: 0.825rem;
+        font-weight: 600;
+        color: #334155;
+    }
+    .step-line {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #cbd5e1;
+        margin: 0 10px;
+        position: relative;
+        top: -14px;
+    }
+
+    /* Table custom styling */
+    .table > :not(caption) > * > * {
+        padding: 14px 16px;
+        vertical-align: middle;
+    }
+    .table thead th {
+        background-color: #f8fafc;
+        color: #475569;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: capitalize;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .table tbody td {
+        font-size: 0.85rem;
+        color: #1e293b;
+    }
+    .nik-sub {
+        font-size: 0.78rem;
+        color: #64748b;
+    }
+
+    /* Badges */
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+    .badge-blue { background-color: #dbeafe; color: #1e40af; }
+    .badge-yellow { background-color: #fef3c7; color: #92400e; }
+    .badge-purple { background-color: #f3e8ff; color: #6b21a8; }
+
+    /* Custom Progress Bar */
+    .progress-custom {
+        height: 8px;
+        border-radius: 10px;
+        background-color: #e2e8f0;
+    }
+    .progress-bar-green {
+        background-color: #16a34a;
+        border-radius: 10px;
+    }
+
+    /* Buttons */
+    .btn-action-primary {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 16px;
+        font-size: 0.825rem;
+        font-weight: 600;
+    }
+    .btn-action-primary:hover {
+        background-color: #1d4ed8;
+        color: white;
+    }
+    .btn-action-outline {
+        border: 1px solid #2563eb;
+        color: #2563eb;
+        background: transparent;
+        border-radius: 8px;
+        padding: 6px 16px;
+        font-size: 0.825rem;
+        font-weight: 600;
+    }
+    .btn-action-outline:hover {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    /* Checklist Items */
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: #334155;
+        padding: 6px 0;
+        font-weight: 500;
+    }
+    .checklist-item i {
+        color: #16a34a;
+        font-size: 1.1rem;
+    }
+
+    /* Action Panel Buttons */
+    .btn-verify-success {
+        background-color: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 10px 16px;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    .btn-verify-success:hover { background-color: #15803d; color: white; }
+
+    .btn-verify-warning {
+        background-color: #fde68a;
+        color: #78350f;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 10px 16px;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    .btn-verify-warning:hover { background-color: #fcd34d; color: #78350f; }
+
+    .btn-verify-info {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 10px 16px;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    .btn-verify-info:hover { background-color: #1d4ed8; color: white; }
+
+    /* Search input style */
+    .search-box {
+        position: relative;
+    }
+    .search-box i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+    .search-box input {
+        padding-left: 38px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        font-size: 0.85rem;
+    }
+
+    /* Bottom Info Banner */
+    .info-banner {
+        background-color: #eff6ff;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #1e40af;
+        font-size: 0.825rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+    }
+    .info-banner i {
+        font-size: 1.2rem;
+        color: #2563eb;
+    }
+</style>
+</head>
+
+<div class="container-fluid p-0">
+    
+    <!-- Header Title -->
+    <div class="mb-4">
+        <h4 class="fw-bold mb-1" style="color: #0f172a;">Beranda Verifikasi Pendamping PKH/TKSK</h4>
+        <p class="text-muted mb-0 small">Verifikasi profil awal KPM yang diajukan oleh Desa/Kelurahan.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <!-- Card 1 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div>
+                    <div class="text-muted small fw-medium mb-1">Perlu Diverifikasi</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileWait}}</div>
+                </div>
+                <div class="stat-icon blue">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div>
+                    <div class="text-muted small fw-medium mb-1">Jadwal Kunjungan</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileScheduled}}</div>
+                </div>
+                <div class="stat-icon blue">
+                    <i class="bi bi-calendar-event-fill"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div>
+                    <div class="text-muted small fw-medium mb-1">Dikembalikan</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileReturn}}</div>
+                </div>
+                <div class="stat-icon red">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div>
+                    <div class="text-muted small fw-medium mb-1">Terverifikasi</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileVerified}}</div>
+                </div>
+                <div class="stat-icon green">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="row g-4">
+        
+        <div class="col-12 col-lg-8 col-xl-9">
+            
+            <!-- Alur Verifikasi Card -->
+            <div class="card card-custom p-3 p-md-4 mb-4">
+                <h6 class="fw-bold mb-3">Alur Verifikasi</h6>
+                <div class="stepper-container overflow-x-auto">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Terima Profil</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Periksa Data</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Kunjungan Lapangan</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Tetapkan Hasil</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daftar KPM Card -->
+            <div class="card card-custom p-3 p-md-4 mb-3">
+                <h6 class="fw-bold mb-3">Daftar KPM Menunggu Verifikasi</h6>
+                
+                <!-- Filter & Search Bar -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12">
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control" placeholder="Cari nama, NIK, ID KPM, atau Desa/Kelurahan">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID KPM</th>
+                                <th>Nama KPM</th>
+                                <th>Desa/Kelurahan</th>
+                                <th>Tanggal Diajukan</th>
+                                <!-- <th>Kelengkapan</th> -->
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            @for(const profile of data.profiles)
+                            <tr>
+                                <td class="fw-medium">AST-DS-{{profile.id}}</td>
+                                <td>
+                                    <div class="fw-bold">{{profile.name}}</div>
+                                    <div class="nik-sub">NIK: {{profile.personal_number}}</div>
+                                </td>
+                                <td class="text-nowrap">{{profile.village}}</td>
+                                <td class="text-nowrap">{{profile.period_created}}</td>
+                                <!-- <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress progress-custom w-100">
+                                            <div class="progress-bar progress-bar-green" style="width: 100%"></div>
+                                        </div>
+                                        <span class="fw-semibold text-secondary" style="font-size: 0.8rem;">100%</span>
+                                    </div>
+                                </td> -->
+                                <td class="text-nowrap">
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <span class="badge-status badge-blue">Perlu Diverifikasi</span>
+                                    @elseif(profile.status == 'Jadwalkan Kunjungan')
+                                    <span class="badge-status badge-yellow">Jadwal Kunjungan</span>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}/verif" router-link class="btn btn-action-primary text-nowrap">Buka Verifikasi</a>
+                                    @elseif(profile.status == 'Jadwalkan Kunjungan')
+                                    <a href="/kpm/profiles/{{profile.id}}/see-schedule" router-link class="btn btn-action-primary text-nowrap">Lihat Jadwal</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endfor
+
+                            @if(data.profiles.length == 0)
+                            <tr>
+                                <td colspan="6">
+                                    <div class="p-3 text-center">
+                                        <i>Tidak ada data</i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bottom Information Banner -->
+            <div class="info-banner">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Pendamping memverifikasi profil yang telah diinput Desa/Kelurahan. Pendamping tidak membuat profil KPM baru.</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 col-xl-3">
+            
+            <!-- Daftar Pemeriksaan Card -->
+            <div class="card card-custom p-3 p-md-4 mb-3">
+                <h6 class="fw-bold mb-3">Daftar Pemeriksaan</h6>
+                <div class="d-flex flex-column gap-1">
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Identitas KPM dan keluarga</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Kepesertaan bantuan sosial</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Kondisi rumah dan keluarga</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Profil usaha dan pendapatan</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Dokumen dan foto pendukung</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Geotag lokasi</span>
+                    </div>
+                    <div class="checklist-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Rencana kebutuhan usaha/RAB UEP</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tindakan Verifikasi Card -->
+            <div class="card card-custom p-3 p-md-4">
+                <h6 class="fw-bold mb-3">Tindakan Verifikasi</h6>
+                <div class="d-flex flex-column gap-2">
+                    <button class="btn btn-verify-success d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-check-circle"></i>
+                        <span>Verifikasi Sesuai</span>
+                    </button>
+                    <button class="btn btn-verify-warning d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Kembalikan</span>
+                    </button>
+                    <button class="btn btn-verify-info d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Jadwalkan Kunjungan</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

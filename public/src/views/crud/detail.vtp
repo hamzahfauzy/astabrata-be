@@ -1,0 +1,44 @@
+<!-- Header -->
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item">
+                <a href="/" router-link>Dashboard</a>
+            </li>
+            @component('breadcrumb', {
+                breadcrumbs: pageAttr.breadcrumbs,
+                title: pageAttr.title
+            })
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">
+                {{pageAttr.title}}
+            </h2>
+            <p class="text-muted mb-0">
+                {{pageAttr.subtitle}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card detail-card rounded-0">
+    
+    <div class="card-header detail-header d-flex justify-content-between align-items-center">
+        <h5 class="detail-title">
+            Detail Information
+        </h5>
+    </div>
+    
+    <div class="card-body detail-body">
+        @for(const field of pageAttr.fields)
+        <div class="row detail-row">
+            <div class="col-sm-4 detail-label">{{field.label}}</div>
+            <div class="col-sm-8 detail-value">{{field.value ? field.value(data[field.key], data) : data[field.key]}}</div>
+        </div>
+        @endfor
+    </div>
+
+</div>

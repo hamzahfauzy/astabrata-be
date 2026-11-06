@@ -1,0 +1,118 @@
+:root {
+    /* Warna hijau utama sesuai gambar */
+    --light-color: #e3eaf0;
+    --brand-color: #1b3855;
+    --brand-hover: #132b42;
+    /* --bg-color: #f9fafb; */
+    --bg-color: #1b3855;
+    --text-dark: #111827;
+    --text-muted: #6b7280;
+}
+
+/* Standard Mobile Styles */
+@media screen and (max-width: 480px) {
+  :root {
+    --bg-color: #FFF;
+  }
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Utility untuk warna text dan tombol */
+.text-brand { color: var(--brand-color); }
+.text-brand:hover { color: var(--brand-hover); }
+
+.btn-brand {
+    background-color: var(--brand-color);
+    color: white;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-brand:hover {
+    background-color: var(--brand-hover);
+    color: white;
+}
+
+/* Styling form dan input */
+.form-control {
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    border-radius: 0 !important;
+}
+
+.form-control:focus {
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 0.25rem rgba(64, 89, 143, 0.2);
+}
+
+.form-label {
+    color: var(--text-dark);
+}
+
+.form-check-input:checked {
+    background-color: var(--brand-color);
+    border-color: var(--brand-color);
+}
+
+.form-check-input:focus {
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 0.25rem rgba(143, 115, 64, 0.2);
+}
+
+/* Ikon Logo (Petir) */
+.brand-logo-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: var(--brand-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* Garis Divider "or continue with" */
+.hr-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 1.5rem 0;
+}
+
+.hr-text::before, .hr-text::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.hr-text:not(:empty)::before { margin-right: 1em; }
+.hr-text:not(:empty)::after { margin-left: 1em; }
+
+/* Tombol Social Login */
+.btn-social {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.btn-social:hover {
+    background-color: #f3f4f6;
+    color: var(--text-dark);
+}
+
+/* Bayangan halus untuk kartu utama */
+.card-custom-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}

@@ -10,7 +10,7 @@ use Libraries\Route;
  * example 1
  * Route::get('/', 'modules/index')
  * 
- * example 2
+ * example 2 : not cacheable
  * Route::get('/', function(\Libraries\Request $request){ return 'Hello World';})
  * 
  * example 3
@@ -20,9 +20,7 @@ use Libraries\Route;
  * Route::get('/', isAuthenticated(), 'modules/index')
  */
 
-Route::get('/', function(){
-    return ['message' => "It's Work"];
-});
+Route::get('/', 'modules/index');
 
 Route::post('/login', validate('modules/auth/validation/login'), 'modules/auth/actions/login');
 Route::post('/register', validate('modules/auth/validation/register'), 'modules/auth/actions/register');
@@ -44,72 +42,3 @@ Route::get('/dashboard', isAuthenticated(), 'modules/dashboard');
 Route::crud('/roles', 'modules/roles/config', 'roles.', isAuthenticated());
 Route::crud('/permissions', 'modules/permissions/config', 'permissions.', isAuthenticated());
 Route::crud('/users', 'modules/users/config', 'users.', isAuthenticated());
-
-Route::get('/villages/find-by-region-name/{name}', isAuthenticated(), 'modules/master/villages/find-by-region-name');
-Route::get('/villages/find-by-region-id/{id}', isAuthenticated(), 'modules/master/villages/find-by-region-id');
-
-Route::get('/regions/get', isAuthenticated(), 'modules/master/regions/get');
-Route::get('/educations/get', isAuthenticated(), 'modules/master/educations/get');
-
-Route::crud('/regions', 'modules/master/regions/config', 'regions.', isAuthenticated());
-Route::crud('/villages', 'modules/master/villages/config', 'villages.', isAuthenticated());
-Route::crud('/instances', 'modules/master/instances/config', 'instances.', isAuthenticated());
-Route::crud('/educations', 'modules/master/educations/config', 'educations.', isAuthenticated());
-Route::crud('/periods', 'modules/master/periods/config', 'periods.', isAuthenticated());
-
-// Route::crud('/kpm/profiles', 'modules/kpm/profiles/config', 'profiles.', isAuthenticated());
-Route::get('/kpm/dashboard', isAuthenticated(), periodActive(), 'modules/kpm/dashboard');
-
-Route::get('/kpm/profile-documents', isAuthenticated(), permissionMiddleware('desa'), periodActive(), 'modules/kpm/profiles/documents');
-Route::get('/kpm/profile-revisions', isAuthenticated(), permissionMiddleware('desa'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Belum Sesuai');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-scheduled', isAuthenticated(), permissionMiddleware('pendamping'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Jadwalkan Kunjungan');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-returned', isAuthenticated(), permissionMiddleware('pendamping'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Belum Sesuai');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-administrations', isAuthenticated(), permissionMiddleware('kecamatan'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Sesuai');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-nominatif', isAuthenticated(), permissionMiddleware('kecamatan'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Diajukan');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-check', isAuthenticated(), permissionMiddleware('dinsos'), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Sesuai');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-target', isAuthenticated(), permissionMiddleware(['dinsos','asesor','kabupaten']), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Sasaran');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-assessments', isAuthenticated(), permissionMiddleware(['dinsos','asesor','kabupaten']), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Assessments');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-intervence-schedules', isAuthenticated(), permissionMiddleware(['opd']), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Jadwalkan');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-implementations', isAuthenticated(), permissionMiddleware(['opd','pelaksana']), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Selesai');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profile-recommendations', isAuthenticated(), permissionMiddleware(['desa']), periodActive(), function(\Libraries\Request $request){
-    $request->setOtherData('filter','Rekomendasi');
-}, 'modules/kpm/profiles/index');
-
-Route::get('/kpm/profiles/{id}/ajukan', isAuthenticated(), periodActive(), permissionMiddleware('kecamatan'), 'modules/kpm/profiles/ajukan');
-Route::get('/kpm/profiles/{id}/process', isAuthenticated(), periodActive(), permissionMiddleware(['dinsos','asesor']), 'modules/kpm/profiles/process');
-
-Route::get('/kpm/profiles', isAuthenticated(), periodActive(), 'modules/kpm/profiles/index');
-Route::get('/kpm/profiles/{id}', isAuthenticated(), periodActive(), 'modules/kpm/profiles/view');
-Route::put('/kpm/profiles/{id}', isAuthenticated(), periodActive(), permissionMiddleware('desa'), 'modules/kpm/profiles/update');
-Route::post('/kpm/profiles/{id}/stage', isAuthenticated(), periodActive(), 'modules/kpm/profiles/submit-stage');
-Route::post('/kpm/profiles', isAuthenticated(), permissionMiddleware('desa'), periodActive(), 'modules/kpm/profiles/create');

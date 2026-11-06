@@ -1,0 +1,757 @@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-page: #edf2f9;
+            --brand-primary: #2563eb;
+            --brand-dark: #1e293b;
+            --brand-title: #0f172a;
+            --border-color: #cbd5e1;
+            --card-border: #dbeafe;
+        }
+
+        /* Typography */
+        .dashboard-title {
+            color: #0f2963;
+            font-weight: 800;
+            font-size: 1.65rem;
+            letter-spacing: -0.02em;
+        }
+
+        .dashboard-subtitle {
+            color: #475569;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .date-picker-badge {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            border: 1px solid #c7d2fe;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* KPI Cards */
+        .kpi-card-box {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            height: 100%;
+        }
+
+        .kpi-icon-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .bg-kpi-green-1 { background-color: #22c55e; color: #ffffff; }
+        .bg-kpi-green-2 { background-color: #16a34a; color: #ffffff; }
+        .bg-kpi-yellow  { background-color: #f59e0b; color: #ffffff; }
+        .bg-kpi-red     { background-color: #ef4444; color: #ffffff; }
+
+        .kpi-label {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0px;
+        }
+
+        .kpi-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        /* Process Stepper Bar */
+        .stepper-container {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
+        .stepper-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .stepper-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+        }
+
+        .stepper-text {
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 0.825rem;
+        }
+
+        .stepper-line {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #3b82f6;
+            margin: 0 12px;
+            position: relative;
+        }
+
+        .stepper-line::after {
+            content: '›';
+            position: absolute;
+            right: 0;
+            top: -11px;
+            color: #3b82f6;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Filter Box */
+        .filter-panel {
+            background-color: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .filter-panel label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 4px;
+        }
+
+        .form-select-custom, .form-control-custom {
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+            padding: 6px 10px;
+            color: #334155;
+        }
+
+        .btn-apply {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 6px 20px;
+            border: none;
+        }
+
+        .btn-apply:hover {
+            background-color: #1d4ed8;
+            color: white;
+        }
+
+        /* Custom Badges for Status */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .badge-diterima { background-color: #dc262600; background: #dcfce7; color: #15803d; }
+        .badge-berjalan { background-color: #dcfce7; color: #15803d; }
+        .badge-berkembang { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .badge-stabil { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .badge-dijadwalkan { background-color: #fef3c7; color: #b45309; }
+        .badge-belum-mulai { background-color: #fee2e2; color: #b91c1c; }
+        .badge-belum-dinilai { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+
+        /* Main Left Table */
+        .table-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .table-panel table th {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 0.775rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 12px 10px;
+        }
+
+        .table-panel table td {
+            padding: 12px 10px;
+            vertical-align: middle;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        /* Right Panel Cards */
+        .panel-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .panel-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        /* Nav Tabs Custom */
+        .nav-tabs-custom {
+            display: flex;
+            gap: 4px;
+            border-bottom: none;
+            background-color: #e0e7ff;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .nav-tabs-custom .nav-link {
+            border: none;
+            border-radius: 6px;
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 8px 16px;
+            background: transparent;
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Blue Sub Cards inside Tab Content */
+        .sub-blue-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            height: 100%;
+        }
+
+        .sub-card-header {
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: 0.825rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Key Value Row Styling */
+        .kv-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 0.775rem;
+        }
+
+        .kv-key {
+            color: #64748b;
+        }
+
+        .kv-val {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* Table Mini */
+        .table-mini {
+            width: 100%;
+            font-size: 0.725rem;
+            border-collapse: collapse;
+        }
+
+        .table-mini th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            padding: 4px 6px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+        }
+
+        .table-mini td {
+            padding: 4px 6px;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+        }
+
+        /* Custom Action Buttons */
+        .btn-action-green {
+            background-color: #16a34a;
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-action-yellow {
+            background-color: #eab308;
+            color: #1e293b;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-action-blue {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Dark Info Box */
+        .dark-info-box {
+            background-color: #334155;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.775rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-info-box {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            border: 1px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.775rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-action {
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 4px 16px;
+            font-size: 0.775rem;
+            background: #ffffff;
+        }
+
+        .btn-outline-action:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+    </style>
+
+    <div class="container-fluid p-0">
+        
+        <!-- HEADER BAR -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+            <div>
+                <h1 class="dashboard-title mb-1">Penyaluran dan Monitoring Pascagraduasi</h1>
+                <p class="dashboard-subtitle mb-0">Mencatat penyaluran paket UEP, pendampingan usaha, dan perkembangan KPM setelah graduasi.</p>
+            </div>
+            <div class="date-picker-badge shadow-sm">
+                <i class="fa-regular fa-calendar-days text-primary"></i>
+                <span>18 Sep 2026</span>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card-box">
+                    <div class="kpi-icon-circle bg-kpi-green-1">
+                        <i class="fa-solid fa-box text-white"></i>
+                    </div>
+                    <div>
+                        <div class="kpi-label">Paket Ditetapkan</div>
+                        <div class="kpi-value">10</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card-box">
+                    <div class="kpi-icon-circle bg-kpi-green-2">
+                        <i class="fa-solid fa-check text-white"></i>
+                    </div>
+                    <div>
+                        <div class="kpi-label">Sudah Disalurkan</div>
+                        <div class="kpi-value">8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card-box">
+                    <div class="kpi-icon-circle bg-kpi-yellow">
+                        <i class="fa-solid fa-users text-white"></i>
+                    </div>
+                    <div>
+                        <div class="kpi-label">Sedang Didampingi</div>
+                        <div class="kpi-value">8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card-box">
+                    <div class="kpi-icon-circle bg-kpi-red">
+                        <i class="fa-solid fa-exclamation text-white fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="kpi-label">Perlu Tindak Lanjut</div>
+                        <div class="kpi-value">2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stepper-container mb-3 overflow-x-auto">
+            <div class="stepper-item">
+                <div class="stepper-badge">1</div>
+                <span class="stepper-text">Persiapan Penyaluran</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-item">
+                <div class="stepper-badge">2</div>
+                <span class="stepper-text">Serah Terima dan Bukti</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-item">
+                <div class="stepper-badge">3</div>
+                <span class="stepper-text">Pendampingan</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-item">
+                <div class="stepper-badge">4</div>
+                <span class="stepper-text">Monitoring Pascagraduasi</span>
+            </div>
+        </div>
+
+        <!-- MAIN LAYOUT 2 COLUMNS -->
+        <div class="row g-3">
+            
+            <div class="col-12 col-lg-6 col-xl-6">
+                <!-- FILTER PANEL -->
+                <div class="filter-panel mb-3">
+                    <div class="row g-2 mb-2">
+                        <div class="col-6 col-md-3">
+                            <label>Kecamatan</label>
+                            <select class="form-select form-select-custom">
+                                <option selected>Semua Kecamatan</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label>Klaster Usaha</label>
+                            <select class="form-select form-select-custom">
+                                <option selected>Semua Klaster Usaha</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label>Status Penyaluran</label>
+                            <select class="form-select form-select-custom">
+                                <option selected>Semua Status Penyaluran</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label>Status Monitoring</label>
+                            <select class="form-select form-select-custom">
+                                <option selected>Semua Status Monitoring</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" class="form-control form-control-custom border-start-0" placeholder="Cari nama atau ID KPM">
+                        </div>
+                        <button class="btn btn-apply text-nowrap">Terapkan</button>
+                    </div>
+                </div>
+
+                <!-- TABLE PANEL -->
+                <div class="table-panel mb-3">
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID KPM</th>
+                                    <th>Nama KPM</th>
+                                    <th>Paket UEP</th>
+                                    <th>Nilai</th>
+                                    <th>Penyaluran</th>
+                                    <th>Pendampingan</th>
+                                    <th>Hasil Monitoring</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-primary fw-medium">AST-KAB-0002</td>
+                                    <td class="fw-bold">MAHMILUDDIN</td>
+                                    <td>Sarana produksi perikanan</td>
+                                    <td class="fw-bold">Rp5.000.000</td>
+                                    <td><span class="status-badge badge-diterima">Diterima</span></td>
+                                    <td><span class="status-badge badge-berjalan">Berjalan</span></td>
+                                    <td><span class="status-badge badge-berkembang">Usaha Berkembang</span></td>
+                                    <td class="text-center"><button class="btn btn-outline-action">Monitor</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary fw-medium">AST-KAB-0001</td>
+                                    <td class="fw-bold">SUGOYONO</td>
+                                    <td>Sarana produksi pertanian</td>
+                                    <td class="fw-bold">Rp5.000.000</td>
+                                    <td><span class="status-badge badge-diterima">Diterima</span></td>
+                                    <td><span class="status-badge badge-berjalan">Berjalan</span></td>
+                                    <td><span class="status-badge badge-stabil">Usaha Stabil</span></td>
+                                    <td class="text-center"><button class="btn btn-outline-action">Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary fw-medium">AST-KAB-0005</td>
+                                    <td class="fw-bold">SITI AMINAH</td>
+                                    <td>Peralatan usaha makanan</td>
+                                    <td class="fw-bold">Rp5.000.000</td>
+                                    <td><span class="status-badge badge-dijadwalkan">Dijadwalkan</span></td>
+                                    <td><span class="status-badge badge-belum-mulai">Belum Mulai</span></td>
+                                    <td><span class="status-badge badge-belum-dinilai">Belum Dinilai</span></td>
+                                    <td class="text-center"><button class="btn btn-outline-action">Tindak Lanjut</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Table Pagination Footer -->
+                    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
+                        <span class="text-muted" style="font-size: 0.775rem;">Menampilkan 3 dari 3 data</span>
+                        <div class="d-flex gap-1 align-items-center">
+                            <button class="btn btn-sm btn-light border px-2 py-0"><i class="fa-solid fa-chevron-left text-muted"></i></button>
+                            <span class="btn btn-sm btn-primary px-3 py-0 fw-bold">1</span>
+                            <button class="btn btn-sm btn-light border px-2 py-0"><i class="fa-solid fa-chevron-right text-muted"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 col-xl-6">
+                <!-- KPM DETAIL CARD -->
+                <div class="panel-card mb-3">
+                    <div class="panel-card-title">
+                        <i class="fa-solid fa-user text-primary"></i>
+                        <span>Rekam Pascagraduasi KPM</span>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="kv-row"><span class="kv-key">Nama</span><span class="kv-val">: MAHMILUDDIN</span></div>
+                            <div class="kv-row"><span class="kv-key">ID</span><span class="kv-val">: AST-KAB-0002</span></div>
+                            <div class="kv-row"><span class="kv-key">Kecamatan</span><span class="kv-val">: Tanjung Balai</span></div>
+                            <div class="kv-row"><span class="kv-key">Status KPM</span><span class="kv-val">: <span class="badge bg-success-subtle text-success border border-success-subtle px-2">Graduasi Mandiri</span></span></div>
+                            <div class="kv-row"><span class="kv-key">Usaha</span><span class="kv-val">: Ternak lele</span></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="kv-row"><span class="kv-key">Paket UEP</span><span class="kv-val">: Sarana Produksi Perikanan</span></div>
+                            <div class="kv-row"><span class="kv-key">Nilai</span><span class="kv-val">: Rp5.000.000</span></div>
+                            <div class="kv-row"><span class="kv-key">PIC</span><span class="kv-val">: Pendamping Usaha Perikanan</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABS & DETAIL GRID -->
+                <div class="panel-card mb-3">
+                    <ul class="nav nav-tabs-custom" role="tablist">
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link active" data-bs-toggle="tab"><i class="fa-solid fa-box me-1"></i> Penyaluran</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" data-bs-toggle="tab"><i class="fa-solid fa-users me-1"></i> Pendampingan</button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" data-bs-toggle="tab"><i class="fa-solid fa-chart-line me-1"></i> Monitoring</button>
+                        </li>
+                    </ul>
+
+                    <div class="row g-2">
+                        <!-- Bukti Penyaluran -->
+                        <div class="col-12 col-md-4">
+                            <div class="sub-blue-card">
+                                <div class="sub-card-header"><i class="fa-solid fa-box"></i> Bukti Penyaluran</div>
+                                <div class="kv-row"><span class="kv-key">Tanggal</span><span class="kv-val">: 18 Sep 2026</span></div>
+                                <div class="kv-row"><span class="kv-key">Status</span><span class="kv-val">: <span class="text-success fw-bold">Diterima</span></span></div>
+                                <div class="kv-row"><span class="kv-key">Berita Acara</span><span class="kv-val">: <span class="badge bg-success-subtle text-success">Lengkap</span></span></div>
+                                <div class="kv-row"><span class="kv-key">Barang Sesuai</span><span class="kv-val">: Ya</span></div>
+                                <div class="kv-row"><span class="kv-key">Foto dan Geotag</span><span class="kv-val">: Tersimpan</span></div>
+                                <button class="btn btn-outline-action w-100 mt-2 py-1"><i class="fa-regular fa-image me-1"></i> Lihat Bukti</button>
+                            </div>
+                        </div>
+
+                        <!-- Pendampingan -->
+                        <div class="col-12 col-md-4">
+                            <div class="sub-blue-card">
+                                <div class="sub-card-header"><i class="fa-solid fa-users"></i> Pendampingan</div>
+                                <div class="kv-row"><span class="kv-key">Pelatihan usaha</span><span class="kv-val">: Selesai</span></div>
+                                <div class="kv-row"><span class="kv-key">Rencana operasional</span><span class="kv-val">: Tersedia</span></div>
+                                <div class="kv-row"><span class="kv-key">Pemanfaatan sarana</span><span class="kv-val">: Berjalan</span></div>
+                                <div class="kv-row"><span class="kv-key">Produksi dan penjualan</span><span class="kv-val">: Dicatat</span></div>
+                                <div class="kv-row"><span class="kv-key">Kendala</span><span class="kv-val">: Pakan dan pemasaran</span></div>
+                                <div class="kv-row"><span class="kv-key">Tindak lanjut</span><span class="kv-val">: Pendampingan pemasaran</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Perkembangan Usaha -->
+                        <div class="col-12 col-md-4">
+                            <div class="sub-blue-card">
+                                <div class="sub-card-header"><i class="fa-solid fa-chart-line"></i> Perkembangan Usaha</div>
+                                <table class="table-mini bg-white">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Sebelum Dukungan</th>
+                                            <th>Monitoring 18 Des 2026</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">Produksi</td>
+                                            <td>50 kg/bulan</td>
+                                            <td>200 kg/bulan</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Omzet</td>
+                                            <td>Rp750.000</td>
+                                            <td>Rp3.200.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Pendapatan bersih</td>
+                                            <td>Rp300.000</td>
+                                            <td>Rp1.800.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Pemanfaatan paket</td>
+                                            <td class="text-center">-</td>
+                                            <td class="text-center fw-bold text-success">100%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KESIMPULAN MONITORING FORM -->
+                <div class="panel-card mb-3">
+                    <div class="fw-bold text-dark mb-2" style="font-size: 0.9rem;">Kesimpulan Monitoring</div>
+
+                    <!-- Radios -->
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulanRad" id="rad1" checked>
+                            <label class="form-check-label fw-bold text-dark" for="rad1">Usaha Berkembang</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulanRad" id="rad2">
+                            <label class="form-check-label fw-bold text-dark" for="rad2">Usaha Stabil</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulanRad" id="rad3">
+                            <label class="form-check-label fw-bold text-dark" for="rad3">Memerlukan Pendampingan Lanjutan</label>
+                        </div>
+                    </div>
+
+                    <!-- Text Inputs -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size: 0.75rem;">Temuan</label>
+                            <textarea class="form-control form-control-custom" rows="2">Produksi meningkat dan pasar mulai meluas.</textarea>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size: 0.75rem;">Rencana Tindak Lanjut</label>
+                            <textarea class="form-control form-control-custom" rows="2">Pendampingan pemasaran dan akses pasar.</textarea>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size: 0.75rem;">Kendala</label>
+                            <textarea class="form-control form-control-custom" rows="2">Pakan dan pemasaran masih menjadi kendala.</textarea>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size: 0.75rem;">Jadwal Monitoring Berikutnya</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control form-control-custom" value="18 Des 2026">
+                                <span class="input-group-text bg-white"><i class="fa-regular fa-calendar text-muted"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-action-green flex-fill"><i class="fa-solid fa-floppy-disk me-1"></i> Simpan Monitoring</button>
+                        <button class="btn btn-action-yellow flex-fill"><i class="fa-solid fa-user-group me-1"></i> Minta Tindak Lanjut</button>
+                        <button class="btn btn-action-blue flex-fill"><i class="fa-solid fa-file-circle-check me-1"></i> Finalisasi Laporan</button>
+                    </div>
+
+                    <!-- Dark Warning Note -->
+                    <div class="dark-info-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Hasil monitoring tidak mengubah status graduasi secara otomatis.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BOTTOM FOOTER CALLOUT -->
+        <div class="footer-info-box mt-2">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Berita acara, daftar barang, foto, geotag, pendampingan, perkembangan usaha, petugas, dan waktu tersimpan dalam register ketertelusuran.</span>
+        </div>
+
+    </div>

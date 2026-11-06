@@ -1,0 +1,4 @@
+<div class="form-group mb-3 {{field.attr && field.attr.wrapperClassName ? field.attr.wrapperClassName : ''}}">
+    <label for="" class="fw-semibold mb-1">{{field.label}}</label>
+    <input type="date" name="{{field.name}}" value="{{data[field.key] ?? ''}}" placeholder="{{field.placeholder ?? field.label}}" class="form-control {{field.attr && field.attr.className ? field.attr.className : ''}}" {{ field.attr ? Object.entries(field.attr).map(([key, value]) => `${key}="${value}"`).join(' ') : '' }}>
+</div>

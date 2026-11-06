@@ -1,0 +1,45 @@
+
+
+<!-- Login Card -->
+<div class="card border-0 rounded-0 w-100" style="max-width: 440px;">
+    <div class="card-body p-4 p-sm-5">
+        <!-- Logo Header -->
+        <div class="mb-4 text-center w-100">
+            <img src="/assets/images/astabrata-logo.png" alt="company-logo" style="width:250px;object-fit: contain;object-position: left;">
+        </div>
+        
+        <!-- Title -->
+        <h4 class="text-center fw-bold mb-1" style="color: var(--text-dark);">Masuk</h4>
+        <p class="text-center mb-4" style="color: var(--text-muted); font-size: 0.9rem;">Gunakan email dan kata sandi anda untuk masuk ke dalam sistem</p>
+
+        <!-- Form -->
+        <form action="" id="loginForm">
+            <!-- Email Input -->
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold small mb-1">Email</label>
+                <input type="email" name="email" class="form-control rounded-3" id="email" placeholder="nama@email.com" required value="{{email}}">
+            </div>
+
+            <!-- Password Input -->
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold small mb-1">Kata Sandi</label>
+                <input type="password" name="password" class="form-control rounded-3" id="password" placeholder="*********" value="{{password}}" required>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check mb-0">
+                    <input class="form-check-input" type="checkbox" value="" id="rememberMe">
+                    <label class="form-check-label text-muted small" for="rememberMe">
+                        Ingat Saya
+                    </label>
+                </div>
+                <a href="/forget-password" class="text-decoration-none fw-semibold small text-brand" router-link>Lupa kata sandi?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-normal btn-brand w-100 rounded-0 py-2 fw-semibold mb-2 btn-login">{{btnLoginLabel}}</button>
+        </form>
+
+    </div>
+</div>

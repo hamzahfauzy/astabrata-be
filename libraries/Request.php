@@ -29,7 +29,20 @@ class Request
         $this->path = parse_url(
             $_SERVER['REQUEST_URI'] ?? '/',
             PHP_URL_PATH
-        );
+        ) ?: '/';
+
+        $apiPrefix = rtrim(env('API_PREFIX', '/api'), '/');
+
+        if ($apiPrefix !== '') {
+            if ($this->path === $apiPrefix) {
+                $this->path = '/';
+            } elseif (str_starts_with($this->path, $apiPrefix . '/')) {
+                $this->path = substr(
+                    $this->path,
+                    strlen($apiPrefix)
+                );
+            }
+        }
 
         $this->query   = $_GET;
         $this->body    = $this->parseBody();

@@ -1,0 +1,9 @@
+<div class="form-group mb-3 {{field.attr && field.attr.wrapperClassName ? field.attr.wrapperClassName : ''}}">
+    <label for="" class="fw-semibold mb-1">{{field.label}}</label>
+    <select name="{{field.name}}" id="" class="form-select">
+        <option>Choose</option>
+        @for(const option of field.options)
+        <option value="{{option.value}}" {{data[field.key] == option.value ? 'selected=""' : ''}}>{{option.label}}</option>
+        @endfor
+    </select>
+</div>

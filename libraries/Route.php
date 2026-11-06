@@ -9,7 +9,21 @@ class Route
     /**
      * Semua route yang terdaftar.
      */
-    protected static array $routes = [];
+    protected static array $routes = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => [],
+    ];
+
+    protected static array $runtimeRoute = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => [],
+    ];
 
     /**
      * Prefix group.
@@ -48,11 +62,13 @@ class Route
     ): void {
 
         $uri = '/' . trim(self::$prefix . '/' . trim($uri, '/'), '/');
+        $method = strtoupper($method);
 
-        self::$routes[] = [
+        self::$routes[$method][] = [
             'method' => strtoupper($method),
             'uri'    => $uri,
-            'handlers' => $handlers,
+            'compiled'  => self::compileRoute($uri),
+            'handlers'  => $handlers,
         ];
     }
 
@@ -120,8 +136,68 @@ class Route
         return null;
     }
 
+    public static function importCache($routes)
+    {
+        self::$routes = $routes;
+    }
+
+    public static function exportCache(): array
+    {
+        $cache = [];
+
+        foreach (self::$routes as $method => $routeGroups) {
+            foreach ($routeGroups as $route) {
+
+                $handlers = $route['handlers'] ?? [];
+
+                // Periksa apakah semua handler bisa di-cache
+                $cacheable = true;
+
+                foreach ($handlers as $handler) {
+
+                    if ($handler instanceof \Closure) {
+                        $cacheable = false;
+                        break;
+                    }
+
+                }
+
+                // Lewati route yang menggunakan Closure
+                if (!$cacheable) {
+                    self::$runtimeRoute[] = $route;
+                    continue;
+                }
+
+                if(!isset($cache[$method]))
+                {
+                    $cache[$method] = [];
+                }
+
+                $cache[$method][] = $route;
+            }
+
+        }
+        return $cache;
+    }
+
     public static function all(): array
     {
         return self::$routes;
+    }
+
+    protected static function compileRoute($pattern)
+    {
+        preg_match_all('/\{(\w+)\}/', $pattern, $names);
+
+        $regex = preg_replace(
+            '/\{\w+\}/',
+            '([^/]+)',
+            $pattern
+        );
+
+        return [
+            'regex' => '#^' . $regex . '$#',
+            'params' => $names[1]
+        ];
     }
 }

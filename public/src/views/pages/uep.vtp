@@ -1,0 +1,651 @@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #1d68d8;
+            --light-bg: #f4f6fb;
+            --border-color: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            background-color: #ffffff;
+        }
+
+        /* Top Summary Cards Styling */
+        .stat-card {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        .stat-icon.green { background-color: #dcfce7; color: #16a34a; }
+        .stat-icon.warning { background-color: #fef3c7; color: #d97706; }
+        .stat-icon.danger { background-color: #fee2e2; color: #dc2626; }
+
+        .stat-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #0f172a;
+        }
+
+        /* Stepper Styling */
+        .stepper-container {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            margin: 15px 0 20px 0;
+        }
+        .stepper-line {
+            position: absolute;
+            top: 50%;
+            left: 8%;
+            right: 8%;
+            height: 2px;
+            background-color: #cbd5e1;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        .step-item {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            background-color: var(--light-bg);
+            padding: 0 10px;
+            gap: 10px;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            box-shadow: 0 0 0 4px var(--light-bg);
+        }
+        .step-item.active .step-number {
+            background-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px var(--light-bg), 0 0 0 6px rgba(29, 104, 216, 0.2);
+        }
+        .step-title {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.85rem;
+        }
+
+        /* Custom Table & Badge Customizations */
+        .table-custom th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+        .table-custom td {
+            padding: 12px;
+            vertical-align: middle;
+            font-size: 0.825rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .badge-soft-green { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+        .badge-soft-warning { background-color: #fef9c3; color: #a16207; border: 1px solid #fef08a; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+        .badge-soft-danger { background-color: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+        .badge-soft-blue { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+        .badge-soft-gray { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+
+        /* Panel Right Custom Details */
+        .detail-panel {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .panel-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .identity-table td {
+            padding: 2px 6px;
+            font-size: 0.825rem;
+        }
+        .identity-table td:first-child {
+            color: var(--text-muted);
+            width: 120px;
+        }
+        
+        .sub-section-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .list-kelengkapan .list-group-item {
+            padding: 4px 8px;
+            border: none;
+            background: transparent;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rab-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 3px 0;
+            color: #334155;
+        }
+
+        /* Form styling inside panel */
+        .form-check-label {
+            font-size: 0.8rem;
+            color: #334155;
+        }
+        .form-control-sm, .form-select-sm {
+            border-radius: 6px;
+            border-color: #cbd5e1;
+            font-size: 0.8rem;
+        }
+
+        .btn-custom-blue {
+            background-color: #1d68d8;
+            color: #ffffff;
+            font-weight: 600;
+            border: none;
+        }
+        .btn-custom-blue:hover {
+            background-color: #1652b0;
+            color: #ffffff;
+        }
+    </style>
+
+<div class="container-fluid p-0">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h4 class="fw-bold mb-1" style="color: #0f172a;">Seleksi dan Penetapan Dukungan UEP</h4>
+            <p class="text-secondary mb-0" style="font-size: 0.875rem;">
+                Memverifikasi proposal, menilai kelayakan usaha, dan menetapkan paket dukungan UEP.
+            </p>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary bg-white btn-sm px-3 py-2 fw-medium shadow-sm rounded-3">
+                <i class="fa-regular fa-calendar me-2"></i> 18 Sep 2026
+            </button>
+        </div>
+    </div>
+
+    <!-- 4 Summary Stat Cards -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-regular fa-file-lines"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Total Proposal</div>
+                    <div class="stat-value">40</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Layak Menerima</div>
+                    <div class="stat-value">10</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="stat-icon warning">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Perlu Perbaikan</div>
+                    <div class="stat-value">20</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="stat-icon danger">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Belum Layak</div>
+                    <div class="stat-value">10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stepper Progress Bar -->
+    <div class="card mb-4">
+        <div class="stepper-container">
+            <div class="stepper-line"></div>
+            
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-title">Tarik Data Calon</div>
+                <i class="fa-solid fa-chevron-right text-muted ms-3 small"></i>
+            </div>
+            
+            <div class="step-item active">
+                <div class="step-number">2</div>
+                <div class="step-title fw-bold" style="color: #1d68d8;">Verifikasi Proposal</div>
+                <i class="fa-solid fa-chevron-right text-muted ms-3 small"></i>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-title">Penilaian Teknis</div>
+                <i class="fa-solid fa-chevron-right text-muted ms-3 small"></i>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-title">Penetapan UEP</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area: Split 7:5 Grid -->
+    <div class="row g-3">
+        
+        <!-- LEFT SIDE: Filters & Table -->
+        <div class="col-lg-7 col-xl-7">
+            <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Filter Row 1 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Kecamatan</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Kecamatan</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Klaster Usaha</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Klaster Usaha</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Status Proposal</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Status Proposal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Status Penetapan</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Status Penetapan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Search Input Row -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-9">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white text-secondary border-end-0">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Cari nama atau ID KPM">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-custom-blue btn-sm w-100">Terapkan</button>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID KPM</th>
+                                    <th>Nama KPM</th>
+                                    <th>Status KPM</th>
+                                    <th>Usaha</th>
+                                    <th>Nilai Usulan</th>
+                                    <th>Dokumen</th>
+                                    <th>Hasil Teknis</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td class="fw-semibold">AST-KAB-0002</td>
+                                    <td class="fw-bold">MAHMILUDDIN</td>
+                                    <td><span class="badge badge-soft-green">Graduasi Mandiri</span></td>
+                                    <td>Ternak lele</td>
+                                    <td>Rp5.000.000</td>
+                                    <td><span class="badge badge-soft-green">Lengkap</span></td>
+                                    <td><span class="badge badge-soft-green">Layak</span></td>
+                                    <td><span class="badge badge-soft-blue">Siap Ditetapkan</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary px-3 py-1 fw-medium" style="font-size: 0.75rem;">Nilai</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td class="fw-semibold">AST-KAB-0001</td>
+                                    <td class="fw-bold">SUGOYONO</td>
+                                    <td><span class="badge badge-soft-green">Graduasi Mandiri</span></td>
+                                    <td>Pertanian padi</td>
+                                    <td>Rp5.000.000</td>
+                                    <td><span class="badge badge-soft-green">Lengkap</span></td>
+                                    <td><span class="badge badge-soft-warning">Perlu Perbaikan</span></td>
+                                    <td><span class="badge badge-soft-warning">Perbaikan</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary px-2 py-1 fw-medium" style="font-size: 0.75rem;">Tindak Lanjut</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr>
+                                    <td class="fw-semibold">AST-KAB-0004</td>
+                                    <td class="fw-bold">NURAINI</td>
+                                    <td><span class="badge badge-soft-danger">Belum Graduasi</span></td>
+                                    <td>Usaha makanan</td>
+                                    <td>Rp5.000.000</td>
+                                    <td><span class="badge badge-soft-danger">Belum Lengkap</span></td>
+                                    <td><span class="badge badge-soft-gray">Belum Dinilai</span></td>
+                                    <td><span class="badge badge-soft-danger">Belum Layak</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary px-3 py-1 fw-medium" style="font-size: 0.75rem;">Lihat</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination & Info Footer -->
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                    <span class="text-secondary small">Menampilkan 3 dari 3 data</span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#"><i class="fa-solid fa-chevron-left"></i></a></li>
+                            <li class="page-item active"><a class="page-link bg-primary border-primary" href="#">1</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#"><i class="fa-solid fa-chevron-right"></i></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Penilaian Proposal UEP Detail Panel -->
+        <div class="col-lg-5 col-xl-5">
+            <div class="detail-panel">
+                <!-- Title -->
+                <div class="panel-header">
+                    <i class="fa-solid fa-user text-primary"></i> Penilaian Proposal UEP
+                </div>
+
+                <!-- Identitas KPM -->
+                <div class="mb-3">
+                    <div class="sub-section-title">Identitas KPM</div>
+                    <table class="table table-borderless identity-table mb-0">
+                        <tbody>
+                            <tr>
+                                <td>Nama</td>
+                                <td>: <strong>MAHMILUDDIN</strong></td>
+                            </tr>
+                            <tr>
+                                <td>ID</td>
+                                <td>: AST-KAB-0002</td>
+                            </tr>
+                            <tr>
+                                <td>Desa/Kelurahan</td>
+                                <td>: Asahan Mati</td>
+                            </tr>
+                            <tr>
+                                <td>Kecamatan</td>
+                                <td>: Tanjung Balai</td>
+                            </tr>
+                            <tr>
+                                <td>Status KPM</td>
+                                <td>: <span class="badge badge-soft-green">Graduasi Mandiri</span></td>
+                            </tr>
+                            <tr>
+                                <td>Klaster Usaha</td>
+                                <td>: Perikanan</td>
+                            </tr>
+                            <tr>
+                                <td>Usaha</td>
+                                <td>: Ternak lele</td>
+                            </tr>
+                            <tr>
+                                <td>Nilai Usulan</td>
+                                <td>: <strong>Rp5.000.000</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Split 2 Kolom (Kelengkapan Proposal & Ringkasan RAB) -->
+                <div class="row g-2 mb-3">
+                    <!-- Kelengkapan Proposal -->
+                    <div class="col-6">
+                        <div class="sub-section-title">Kelengkapan Proposal</div>
+                        <ul class="list-group list-kelengkapan">
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> Data umum</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> Profil usaha</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> Hasil asesmen</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> Permasalahan dan kebutuhan</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> RAB</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span><i class="fa-regular fa-file-text me-1 text-muted"></i> Pendapatan dan dokumentasi</span>
+                                <span class="badge badge-soft-green">Lengkap</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Ringkasan RAB -->
+                    <div class="col-6 bg-light p-2 rounded-3 border">
+                        <div class="sub-section-title">Ringkasan RAB</div>
+                        <div class="rab-item">
+                            <span>Kolam terpal</span>
+                            <span>Rp1.200.000</span>
+                        </div>
+                        <div class="rab-item">
+                            <span>Rangka kolam</span>
+                            <span>Rp700.000</span>
+                        </div>
+                        <div class="rab-item">
+                            <span>Bibit lele</span>
+                            <span>Rp1.250.000</span>
+                        </div>
+                        <div class="rab-item">
+                            <span>Pakan</span>
+                            <span>Rp1.080.000</span>
+                        </div>
+                        <div class="rab-item">
+                            <span>Peralatan dan sanitasi</span>
+                            <span>Rp770.000</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top fw-bold text-dark" style="font-size: 0.85rem;">
+                            <span>TOTAL</span>
+                            <span class="text-primary">Rp5.000.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action links buttons -->
+                <div class="d-flex gap-2 mb-3">
+                    <button class="btn btn-sm btn-outline-secondary bg-white text-dark border"><i class="fa-regular fa-file me-1 text-primary"></i> Lihat Proposal</button>
+                    <button class="btn btn-sm btn-outline-secondary bg-white text-dark border"><i class="fa-regular fa-image me-1 text-primary"></i> Lihat Bukti</button>
+                </div>
+
+                <!-- Penilaian Teknis & Keputusan (2 Kolom) -->
+                <div class="row g-2 mb-3">
+                    <div class="col-7">
+                        <div class="sub-section-title">Penilaian Teknis</div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="check1" checked>
+                            <label class="form-check-label" for="check1">Kelayakan usaha</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="check2" checked>
+                            <label class="form-check-label" for="check2">Manfaat terhadap kemandirian</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="check3" checked>
+                            <label class="form-check-label" for="check3">Kewajaran harga</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="check4" checked>
+                            <label class="form-check-label" for="check4">Tidak terdapat duplikasi bantuan</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="checkbox" id="check5" checked>
+                            <label class="form-check-label" for="check5">Ketersediaan anggaran</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="sub-section-title">Keputusan</div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="radioKeputusan" id="radio1" checked>
+                            <label class="form-check-label fw-semibold text-primary" for="radio1">Layak Menerima</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="radioKeputusan" id="radio2">
+                            <label class="form-check-label" for="radio2">Perlu Perbaikan Proposal</label>
+                        </div>
+                        <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="radioKeputusan" id="radio3">
+                            <label class="form-check-label" for="radio3">Belum Layak</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Paket UEP & Nilai Ditetapkan -->
+                <div class="mb-2">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Kebutuhan Pelatihan</label>
+                    <input type="text" class="form-control form-control-sm" value="Budidaya dan pengelolaan usaha">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Paket UEP</label>
+                    <input type="text" class="form-control form-control-sm" value="Sarana Produksi Perikanan">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Nilai Ditetapkan</label>
+                    <input type="text" class="form-control form-control-sm fw-bold" value="Rp5.000.000">
+                </div>
+
+                <!-- Catatan, PIC, Sumber Anggaran -->
+                <div class="mb-2">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Catatan Verifikasi</label>
+                    <textarea class="form-control form-control-sm" rows="2" placeholder="Tulis catatan verifikasi..."></textarea>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold text-secondary mb-1">PIC Pendampingan</label>
+                        <select class="form-select form-select-sm">
+                            <option selected>Pilih atau ketik nama...</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Sumber Anggaran</label>
+                        <select class="form-select form-select-sm">
+                            <option selected>Pilih sumber anggaran...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bottom Action Buttons -->
+                <div class="d-flex gap-2 mb-3">
+                    <button class="btn btn-sm btn-success flex-fill fw-medium" style="font-size: 0.8rem;">
+                        <i class="fa-solid fa-square-check me-1"></i> Simpan Penilaian
+                    </button>
+                    <button class="btn btn-sm btn-warning text-dark flex-fill fw-medium" style="font-size: 0.8rem; background-color: #fef08a; border-color: #fde047;">
+                        <i class="fa-solid fa-arrow-rotate-left me-1"></i> Kembalikan untuk Perbaikan
+                    </button>
+                    <button class="btn btn-sm btn-primary flex-fill fw-medium" style="font-size: 0.8rem; background-color: #1d68d8;">
+                        <i class="fa-solid fa-check me-1"></i> Tetapkan Dukungan UEP
+                    </button>
+                </div>
+
+                <!-- Footer Info Note -->
+                <div class="d-flex align-items-start gap-2 p-2 bg-light rounded-3 text-secondary" style="font-size: 0.75rem;">
+                    <i class="fa-solid fa-circle-info text-warning mt-1"></i>
+                    <div>
+                        Graduasi tidak otomatis menjadi hak menerima UEP. Penetapan berdasarkan kelayakan, bukti, kewenangan, dan ketersediaan anggaran.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Page Note -->
+    <div class="text-secondary small mt-3">
+        <i class="fa-solid fa-circle-info me-1"></i> Penetapan UEP belum merupakan penyaluran. Paket disalurkan sesuai ketentuan dan seluruh bukti dicatat dalam register keterlusuran.
+    </div>
+</div>

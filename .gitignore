@@ -2,3 +2,10 @@
 /.env
 
 /uploads/*
+/cache/*
+!/cache/.gitkeep
+
+/logs/*
+!/logs/.gitkeep
+
+public/src/config/env.js

@@ -1,0 +1,88 @@
+<div class="sidebar bg-brand border-end" data-vtp-component="vtp-sidebar">
+    <div class="offcanvas-md offcanvas-start bg-brand" tabindex="-1" id="sidebarMenu">
+        <!-- Mobile Header -->
+        <div class="offcanvas-header border-bottom">
+            <h5 class="mb-0 fw-bold">Menu</h5>
+            <button class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column py-3">
+            <!-- MAIN -->
+            <small class="text-uppercase text-secondary fw-semibold px-2 mb-2">
+                Main Menu
+            </small>
+
+            <ul class="nav nav-pills flex-column gap-2">
+                @for(const menu of menus)
+                @if(isAllowed(menu.permissions))
+                <li class="nav-item">
+                    @if(menu.children.length)
+                    <a class="nav-link d-flex align-items-center vtp-side-menu {{isRouteActive(menu.activeState) ? 'active' : ''}}" data-bs-toggle="collapse" href="#{{menu.name}}" role="button" aria-expanded="false">
+                        <i class="{{menu.icon}}"></i>
+                        <span>{{menu.label}}</span>
+                        <i class="bi bi-chevron-down fs-6 ms-auto"></i>
+                    </a>
+                    <div class="collapse {{isRouteActive(menu.activeState) ? 'show' : ''}}" id="{{menu.name}}">
+                        <ul class="nav flex-column submenu">
+                            @for(const children of menu.children)
+                            <li>
+                                <a href="{{children.route}}" class="nav-link {{isRouteActive(children.activeState) ? 'sub-active' : ''}}" router-link>
+                                    <i class="bi bi-dot"></i>
+                                    {{children.label}}
+                                </a>
+                            </li>
+                            @endfor
+                        </ul>
+                    </div>
+                    @else
+                    <a href="{{menu.route}}" class="nav-link vtp-side-menu {{isRouteActive(menu.activeState) ? 'active' : ''}}" router-link>
+                        <i class="{{menu.icon}}"></i>
+                        {{menu.label}}
+                    </a>
+                    @endif
+                </li>
+                @endif
+                @endfor
+            </ul>
+            <hr>
+            <!-- SYSTEM -->
+            <small class="text-uppercase text-secondary fw-semibold px-2 mb-2">
+                Sistem
+            </small>
+            <ul class="nav nav-pills flex-column gap-2 mb-2">
+                @if(isAllowed('users.index'))
+                <li>
+                    <a href="/users" class="nav-link vtp-side-menu {{isRouteActive('/users/*') ? 'active' : ''}}" router-link>
+                        <i class="bi bi-people"></i>
+                        Pengguna
+                    </a>
+                </li>
+                @endif
+
+                @if(isAllowed('roles.index'))
+                <li>
+                    <a href="/roles" class="nav-link vtp-side-menu {{isRouteActive('/roles/*') ? 'active' : ''}}" router-link>
+                        <i class="bi bi-person-badge"></i>
+                        Peran & Hak Akses
+                    </a>
+                </li>
+                @endif
+
+                @if(isAllowed('setting') && false)
+                <li>
+                    <a href="/setting" class="nav-link vtp-side-menu {{isRouteActive('/setting') ? 'active' : ''}}" router-link>
+                        <i class="bi bi-gear"></i>
+                        Settings
+                    </a>
+                </li>
+                @endif
+                <li>
+                    <a href="javascript:void(0)" class="nav-link text-danger btn-logout">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Keluar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

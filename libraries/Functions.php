@@ -63,27 +63,7 @@ function auth()
 
 function isAuthenticated()
 {
-    return function(Request $request){
-        $user = auth()->user();
-        if(!$user)
-        {
-            throw new UnauthorizedException([
-                'message' => 'Unauthorized'
-            ]);
-        }
-
-        $user->assignment = DB::table('user_assignment')
-            ->select('user_assignment.*, CASE WHEN model_name = "villages" THEN villages.name WHEN model_name = "regions" THEN regions.name WHEN model_name = "instances" THEN instances.name END user_assignment_name, rg.name region_name')
-            ->leftJoin('villages','villages.id','=','user_assignment.model_id AND user_assignment.model_name = "villages"')
-            ->leftJoin('regions','regions.id','=','user_assignment.model_id AND user_assignment.model_name = "regions"')
-            ->leftJoin('regions rg','rg.id','=','villages.region_id AND user_assignment.model_name = "villages"')
-            ->leftJoin('instances','instances.id','=','user_assignment.model_id AND user_assignment.model_name = "instances"')
-            ->where('user_id','=',$user->id)->first();
-
-        $user->assignment_display = $user->assignment?->user_assignment_name;
-
-        $request->setUser($user);
-    };
+    return [\Libraries\Middlewares\AuthMiddleware::class, 'handle'];
 }
 
 function periodActive()
@@ -110,26 +90,12 @@ function can($permission)
 
 function permissionMiddleware($permission)
 {
-    return function(Request $request) use ($permission) {
-
-        if (!auth()->can($permission)) {
-            throw new UnauthorizedException([
-                'message' => 'Unauthorized'
-            ]);
-        }
-
-        return true;
-    };
+    return [\Libraries\Middlewares\PermissionMiddleware::class, 'handle', $permission];
 }
 
-function validate($file){
-    return function (Request $request) use ($file) {
-        if(file_exists($file .'.php'))
-        {
-            $rules = require $file .'.php';
-            $request->validate($rules);
-        }
-    };
+function validate(string $file): array
+{
+    return [\Libraries\Middlewares\ValidateMiddleware::class, 'handle', $file];
 }
 
 function crudPermission($prefix)
@@ -140,9 +106,7 @@ function crudPermission($prefix)
 }
 
 function crudConfig(array $config){
-    return function (Request $request) use ($config) {
-        $request->setOtherData('crudConfig', $config);
-    };
+    return [\Libraries\Middlewares\CrudConfig::class, 'handle', $config];
 }
 
 

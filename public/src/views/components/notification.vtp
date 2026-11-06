@@ -1,0 +1,89 @@
+<div class="dropdown vtp-notification">
+    <button class="btn btn-transparent p-2 position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell fs-5"></i>
+        <!-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            5
+        </span> -->
+    </button>
+    <div class="dropdown-menu dropdown-menu-end p-0 shadow border-0 rounded-0 notification-dropdown">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+            <div>
+                <h6 class="mb-0 fw-bold">
+                    Notifications
+                </h6>
+                <!-- <small class="text-muted">
+                    You have 5 unread notifications
+                </small> -->
+            </div>
+            <!-- <a href="#" class="small text-decoration-none">
+                Mark all
+            </a> -->
+        </div>
+        <a href="#" class="dropdown-item notification-item">
+            <div class="fw-semibold">
+                No Notification
+            </div>
+        </a>
+
+        <!-- Notification Item -->
+        <!-- <a href="#" class="dropdown-item notification-item">
+            <div class="notification-icon bg-primary-subtle text-primary">
+                <i class="bi bi-cart"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-semibold">
+                    New Order
+                </div>
+                <small class="text-muted">
+                    Order #INV-1024 has been created.
+                </small>
+                <div class="small text-secondary mt-1">
+                    2 minutes ago
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="dropdown-item notification-item">
+            <div class="notification-icon bg-success-subtle text-success">
+                <i class="bi bi-person-plus"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-semibold">
+                    New Customer
+                </div>
+                <small class="text-muted">
+                    Emma Wilson registered.
+                </small>
+                <div class="small text-secondary mt-1">
+                    15 minutes ago
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="dropdown-item notification-item">
+            <div class="notification-icon bg-warning-subtle text-warning">
+                <i class="bi bi-exclamation-circle"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-semibold">
+                    Low Stock
+                </div>
+                <small class="text-muted">
+                    3 products are running low.
+                </small>
+                <div class="small text-secondary mt-1">
+                    1 hour ago
+                </div>
+            </div>
+        </a> -->
+
+        <!-- Footer -->
+        <div class="border-top text-center p-2">
+            <a href="#" class="text-decoration-none fw-semibold">
+                View all notifications
+            </a>
+        </div>
+    </div>
+
+</div>

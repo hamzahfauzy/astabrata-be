@@ -1,0 +1,33 @@
+<header class="navbar sticky-top bg-white flex-md-nowrap p-0" data-bs-theme="light">
+    <a class="navbar-brand navbar-desktop col-md-3 col-lg-2 me-0 px-3 fs-6 text-dark" href="/" router-link>
+        <img src="/assets/images/astabrata-logo-white.png" alt="Astabrata Logo" class="w-100 h-100" style="object-fit: cover;object-position: left;">
+    </a> 
+    <a class="navbar-brand navbar-mobile col-md-3 col-lg-2 me-0 px-3 fs-6 text-dark" href="/" router-link>
+        <img src="/assets/images/astabrata-logo.png" alt="Astabrata Logo" class="w-100 h-100" style="object-fit: cover;object-position: left;">
+    </a> 
+    <!-- Right Menu -->
+    <div class="ms-auto d-flex align-items-center gap-2 px-md-4 px-2">
+        <!-- Notification -->
+        @component('vtp-notification')
+
+        <!-- User -->
+        @component('vtp-account')
+
+        <!-- Mobile Toggle -->
+        <button class="btn btn-transparent btn-burger p-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+    </div>
+    
+</header>
+<div class="container-fluid">
+    <div class="row">
+         @component('vtp-sidebar')
+
+        <main class="main-content p-4">
+            <section data-vtprouter class="main-content-section"></section>
+        </main>
+    </div>
+</div>

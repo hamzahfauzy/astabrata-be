@@ -1,0 +1,8 @@
+@for(const breadcrumb of breadcrumbs)
+<li class="breadcrumb-item">
+    <a href="{{breadcrumb.route}}" router-link>{{breadcrumb.label}}</a>
+</li>
+@endfor
+<li class="breadcrumb-item active">
+    {{title}}
+</li>

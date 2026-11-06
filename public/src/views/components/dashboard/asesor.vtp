@@ -1,0 +1,532 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+<style>
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .main-title {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .stat-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .stat-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        /* Stat Card Theme Colors */
+        .stat-blue .stat-icon-wrapper { background-color: #ebf5ff; color: #2563eb; }
+        .stat-blue .stat-value { color: #1d4ed8; }
+
+        .stat-orange .stat-icon-wrapper { background-color: #fff7ed; color: #ea580c; }
+        .stat-orange .stat-value { color: #c2410c; }
+
+        .stat-lightblue .stat-icon-wrapper { background-color: #f0f9ff; color: #0284c7; }
+        .stat-lightblue .stat-value { color: #0369a1; }
+
+        .stat-green .stat-icon-wrapper { background-color: #f0fdf4; color: #16a34a; }
+        .stat-green .stat-value { color: #15803d; }
+
+        /* General Cards */
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header-custom {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #0f172a;
+            padding: 18px 20px 12px 20px;
+            border-bottom: none;
+            background: transparent;
+        }
+
+        /* Flow / Workflow Steps */
+        .flow-step-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            color: #1e40af;
+            font-size: 1.1rem;
+        }
+
+        .flow-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+        }
+
+        .flow-step-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .flow-step-desc {
+            font-size: 0.73rem;
+            color: #64748b;
+            line-height: 1.35;
+        }
+
+        .flow-arrow {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Soft Badges */
+        .badge-soft {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .badge-soft-green { background-color: #dcfce7; color: #15803d; }
+        .badge-soft-blue { background-color: #dbeafe; color: #1d4ed8; }
+        .badge-soft-yellow { background-color: #fef9c3; color: #a16207; }
+        .badge-soft-red { background-color: #fee2e2; color: #b91c1c; }
+        .badge-soft-gray { background-color: #f1f5f9; color: #475569; }
+
+        /* Custom Table */
+        .table-custom th {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #475569;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px;
+            white-space: nowrap;
+        }
+        
+        .table-custom td {
+            vertical-align: middle;
+            font-size: 0.82rem;
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .btn-table-action {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 6px;
+        }
+
+        /* Checklist sidebar */
+        .instrument-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .instrument-icon {
+            margin-right: 10px;
+            font-size: 1.05rem;
+        }
+        .instrument-icon.checked { color: #16a34a; }
+        .instrument-icon.unchecked { color: #cbd5e1; }
+
+        /* Conclusion option card */
+        .conclusion-option {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .conclusion-option.selected {
+            background-color: #dcfce7;
+            border-color: #86efac;
+            color: #14532d;
+            font-weight: 600;
+        }
+
+        .info-banner {
+            background-color: #e0f2fe;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #0369a1;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    </style>
+    
+<div class="dashboard-container p-0">
+    <!-- Header Title -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <h1 class="main-title mb-1">Asesmen dan Penilaian Kemandirian</h1>
+            <p class="subtitle mb-0">Profil awal KPM tampil otomatis sebagai dasar pengisian asesmen dan baseline.</p>
+        </div>
+    </div>
+
+    <!-- Top Stat Cards (4 Cards) -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card stat-blue">
+                <div class="stat-icon-wrapper">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Target Asesmen</div>
+                    <div class="stat-value">{{data.totalProfile}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card stat-orange">
+                <div class="stat-icon-wrapper">
+                    <i class="fa-solid fa-file-pen"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Belum Dimulai</div>
+                    <div class="stat-value">{{data.totalProfileReady}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card stat-lightblue">
+                <div class="stat-icon-wrapper">
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Dalam Proses</div>
+                    <div class="stat-value">{{data.totalProfileProcess}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card stat-green">
+                <div class="stat-icon-wrapper">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Asesmen Selesai</div>
+                    <div class="stat-value">{{data.totalProfileFinish}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="row g-4">
+        <!-- Left Column (~8) -->
+        <div class="col-12 col-lg-8">
+            
+            <!-- Alur Asesmen Section -->
+            <div class="card-custom p-3 mb-4">
+                <div class="card-header-custom p-0 pb-3">Alur Asesmen</div>
+                <div class="row text-center align-items-center g-2">
+                    <!-- Step 1 -->
+                    <div class="col-12 col-md-2">
+                        <div class="flow-num">1</div>
+                        <div class="flow-step-icon">
+                            <i class="fa-regular fa-file-lines"></i>
+                        </div>
+                        <div class="flow-step-title">Buka Profil</div>
+                        <div class="flow-step-desc">Profil awal KPM tampil otomatis dari data ASTABRATA</div>
+                    </div>
+                    
+                    <div class="col-12 col-md-1 d-none d-md-block">
+                        <i class="fa-solid fa-chevron-right flow-arrow"></i>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="col-12 col-md-2">
+                        <div class="flow-num">2</div>
+                        <div class="flow-step-icon">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div class="flow-step-title">Verifikasi Kondisi</div>
+                        <div class="flow-step-desc">Verifikasi identitas, anggota keluarga, pekerjaan, penghasilan, dan kondisi tempat tinggal</div>
+                    </div>
+
+                    <div class="col-12 col-md-1 d-none d-md-block">
+                        <i class="fa-solid fa-chevron-right flow-arrow"></i>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="col-12 col-md-2">
+                        <div class="flow-num">3</div>
+                        <div class="flow-step-icon">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                        <div class="flow-step-title">Nilai Kemandirian</div>
+                        <div class="flow-step-desc">Nilai aspek ekonomi, sosial, dan indikator pendukung lainnya</div>
+                    </div>
+
+                    <div class="col-12 col-md-1 d-none d-md-block">
+                        <i class="fa-solid fa-chevron-right flow-arrow"></i>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="col-12 col-md-2">
+                        <div class="flow-num">4</div>
+                        <div class="flow-step-icon" style="background-color: #dcfce7; color: #16a34a;">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="flow-step-title">Tetapkan Kesimpulan</div>
+                        <div class="flow-step-desc">Tentukan hasil penilaian kemandirian KPM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daftar KPM Table Section -->
+            <div class="card-custom p-3">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <div class="card-header-custom p-0">Daftar KPM Sasaran Asesmen</div>
+                    
+                    <div class="d-flex gap-2 w-100 w-sm-auto" style="max-width: 400px;">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" class="form-control border-start-0 ps-0" placeholder="Cari nama, ID KPM, Kecamatan, atau Desa/Kelurahan">
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary fw-semibold text-nowrap" type="button">
+                            <i class="fa-solid fa-filter me-1"></i> Filter <i class="fa-solid fa-chevron-down ms-1 fs-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle">
+                        <thead>
+                            <tr>
+                                <!-- <th style="width: 30px;"><input type="checkbox" class="form-check-input"></th> -->
+                                <th>ID KPM</th>
+                                <th>Nama KPM</th>
+                                <th>Kecamatan</th>
+                                <th>Petugas</th>
+                                <th>Profil Awal</th>
+                                <th>Baseline</th>
+                                <th>Penilaian</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            @for(const profile of data.profiles)
+                            <tr>
+                                <!-- <td><input type="checkbox" class="form-check-input"></td> -->
+                                <td class="fw-semibold text-primary">AST-KAB-{{profile.id}}</td>
+                                <td class="fw-bold text-nowrap">{{profile.name}}</td>
+                                <td class="text-nowrap">{{profile.region}}</td>
+                                <td class="text-nowrap">{{profile.assessor_name}}</td>
+                                <td class="text-nowrap">
+                                    @if(profile.stage_data.identity)
+                                    @if(profile.stage_data.identity == 'Sesuai')
+                                    <span class="badge-soft badge-soft-green">Lengkap</span>
+                                    @endif
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    <span class="badge-soft badge-soft-gray">Belum Ada</span>
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(profile.stage_name == 'stage_4' && profile.stage_result == 'process')
+                                    <span class="badge-soft badge-soft-blue">Dalam Proses</span>
+                                    @elseif(profile.stage_name == 'stage_4' && profile.stage_result == 'Memenuhi Kriteria Mandiri')
+                                    <span class="badge-soft badge-soft-green">Selesai</span>
+                                    @else
+                                    <span class="badge-soft badge-soft-gray">Belum Penilaian</span>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(profile.stage_name == 'stage_4')
+                                    @if(profile.stage_data.results == 'Memenuhi Kriteria Mandiri')
+                                    <span class="badge-soft badge-soft-green">{{profile.stage_data.results}}</span>
+                                    @elseif(profile.stage_result != 'process')
+                                    <span class="badge-soft badge-soft-gray">{{profile.stage_data.results}}</span>
+                                    @else
+                                    <span class="badge-soft badge-soft-yellow">Belum Disimpulkan</span>
+                                    @endif
+                                    @else
+                                    <span class="badge-soft badge-soft-yellow">Belum Disimpulkan</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if(profile.stage == 'stage_4' && profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}/assessment" router-link class="btn btn-primary btn-table-action">Nilai</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endfor
+
+                            @if(data.profiles.length == 0)
+                            <tr>
+                                <td colspan="9">
+                                    <div class="p-3 text-center">
+                                        <i>Tidak ada data</i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- Bottom System Info Banner -->
+            <div class="info-banner mt-3">
+                <i class="fa-solid fa-circle-info fs-5 mt-1"></i>
+                <div>
+                    Petugas tidak menginput ulang profil. Setiap perubahan, bukti, waktu, dan hasil penilaian tercatat dalam riwayat sistem.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar Column (~4) -->
+        <div class="col-12 col-lg-4">
+            
+            <!-- Instrumen Asesmen Card -->
+            <div class="card-custom p-3 mb-4">
+                <div class="card-header-custom p-0 pb-3">Instrumen Asesmen</div>
+                
+                <div class="mb-3">
+                    <div class="instrument-item">
+                        <i class="fa-solid fa-square-check instrument-icon checked"></i>
+                        <span>A. Identitas Penerima Manfaat</span>
+                    </div>
+                    <div class="instrument-item">
+                        <i class="fa-solid fa-square-check instrument-icon checked"></i>
+                        <span>B. Kondisi Keluarga</span>
+                    </div>
+                    <div class="instrument-item">
+                        <i class="fa-solid fa-square-check instrument-icon checked"></i>
+                        <span>C. Kemandirian Ekonomi</span>
+                    </div>
+                    <div class="instrument-item">
+                        <i class="fa-solid fa-square-check instrument-icon checked"></i>
+                        <span>D. Kemandirian Sosial</span>
+                    </div>
+                    <div class="instrument-item">
+                        <i class="fa-regular fa-square instrument-icon unchecked"></i>
+                        <span>E. Kesimpulan</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-semibold text-muted fs-xs">Kelengkapan Instrumen</span>
+                        <span class="fw-bold text-success fs-6">80%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary py-2 fw-semibold"><i class="fa-regular fa-file-lines me-2"></i>Buka Asesmen KPM</button>
+                    <button class="btn btn-outline-primary py-2 fw-semibold"><i class="fa-regular fa-user me-2"></i>Lihat Profil Awal</button>
+                </div>
+            </div>
+
+            <!-- Pilihan Kesimpulan Card -->
+            <div class="card-custom p-3">
+                <div class="card-header-custom p-0 pb-3">Pilihan Kesimpulan</div>
+                
+                <div class="mb-3">
+                    <label class="conclusion-option selected w-100">
+                        <input type="radio" name="kesimpulan" checked class="form-check-input me-2">
+                        <span>Memenuhi kriteria mandiri</span>
+                    </label>
+
+                    <label class="conclusion-option w-100">
+                        <input type="radio" name="kesimpulan" class="form-check-input me-2">
+                        <span>Belum memenuhi</span>
+                    </label>
+
+                    <label class="conclusion-option w-100">
+                        <input type="radio" name="kesimpulan" class="form-check-input me-2">
+                        <span>Memerlukan verifikasi lanjutan</span>
+                    </label>
+                </div>
+
+                <!-- Info Box inside sidebar -->
+                <div class="info-banner" style="background-color: #f0f9ff; color: #0369a1;">
+                    <i class="fa-solid fa-circle-info fs-5 mt-1"></i>
+                    <div class="fs-xs">
+                        Kesimpulan asesmen ini merupakan hasil penilaian kemandirian KPM, belum merupakan keputusan graduasi administratif.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

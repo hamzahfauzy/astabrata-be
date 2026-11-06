@@ -1,0 +1,142 @@
+<!-- Header -->
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item">
+                <a href="/" router-link>Dashboard</a>
+            </li>
+            @component('breadcrumb', {
+                breadcrumbs: list.breadcrumbs,
+                title: list.title
+            })
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">
+                {{list.title}}
+            </h2>
+            <p class="text-muted mb-0">
+                {{list.subtitle}}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            @for(const action of list.headerActions)
+            @component('vtp-action', {
+                action,
+                data: {}
+            })
+            @endfor
+        </div>
+    </div>
+</div>
+
+@if(success)
+<div class="alert alert-success">
+    {{ success }}
+</div>
+@endif
+
+<!-- Table Card -->
+<div class="card shadow-sm mb-4 rounded-0">
+    <div class="card-header bg-white border-bottom-0 pt-4 d-md-flex flex-row-reverse justify-content-between align-items-sm-center gap-3">
+        <form id="searchForm" class="mb-0">
+            <div class="d-flex gap-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-secondary" id="search-addon">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control bg-light border-start-0 ps-0" placeholder="Search..." aria-describedby="search-addon" value="{{query.search}}">
+                </div>
+                <button class="btn btn-outline-secondary d-flex align-items-center rounded-0">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-body p-0 mt-3">
+        @if(isLoading)
+        <div class="data-loading">
+            <div class="loading-content">
+                Loading...
+            </div>
+        </div>
+        @endif
+
+        <div class="table-responsive">
+            <table class="table datatable table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        @for(const col of list.columns)
+                        <th>{{col.label}}</th>
+                        @endfor
+                        <th></th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    @for(const d of data)
+                    <tr>
+                        @for(const col of list.columns)
+                        <td class="py-3 {{col.cellClass ?? ''}}">{{ col.value ? col.value(d[col.key], d) : d[col.key] }}</td>
+                        @endfor
+                        <td class="action-col">
+                            @if(filterAction(list.actions).filter(action => action.condition ? action.condition(d) : true).length)
+                            <div class="dropdown datatable-dropdown-action">
+                                <button class="btn btn-light btn-sm rounded-circle text-secondary p-2 shadow-none" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @for(const action of filterAction(list.actions))
+                                    <li>
+                                    @if(action.condition ? action.condition(d) : true)
+                                    @component('vtp-action', {
+                                        action: {...action, class: action.class + ' dropdown-item'},
+                                        data: d
+                                    })
+                                    @endif
+                                    </li>
+                                    @endfor
+                                </ul>
+                            </div>
+                            @endif
+                        </td>
+                    </tr>
+                    @endfor
+                    
+                    @if(data.length == 0)
+                    <tr>
+                        <td colspan="{{list.columns.length+1}}"><span style="padding-top: 1rem;padding-bottom: 1rem;display:block;text-align: center;"><i>No Data Found!</i></span></td>
+                    </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-4 mb-3 text-secondary">
+    <div class="small">
+        Showing <span class="fw-semibold text-dark">{{ meta.from }}</span> to <span class="fw-semibold text-dark">{{ meta.to }}</span> of <span class="fw-semibold text-dark">{{ meta.total }}</span> Results
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm mb-0 shadow-sm">
+            <li class="page-item {{meta.page == 1 ? 'disabled' : ''}}">
+                <a class="page-link text-secondary" href="{{baseUrl}}/?page={{(meta.page-1)}}&search={{query.search}}" router-link tabindex="-1" aria-disabled="{{meta.page == 1 ? 'true' : 'false'}}">Previous</a>
+            </li>
+            @for(let i=1; i<=meta.last_page; i++)
+            <li class="page-item {{ i == meta.page ? 'active' : '' }}" aria-current="page">
+                <a class="page-link {{ i != meta.page ? 'text-secondary' : '' }}" href="{{baseUrl}}/?page={{i}}&search={{query.search}}" router-link>{{i}}</a>
+            </li>
+            @endfor
+            <li class="page-item {{meta.page == meta.last_page ? 'disabled' : ''}}">
+                <a class="page-link text-secondary" href="{{baseUrl}}/?page={{(meta.page+1)}}&search={{query.search}}" router-link aria-disabled="{{meta.page == meta.last_page ? 'true' : 'false'}}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

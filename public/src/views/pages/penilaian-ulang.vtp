@@ -1,0 +1,629 @@
+
+    <style>
+        :root {
+            --bg-main: #f4f7fc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-muted: #64748b;
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --soft-blue: #eff6ff;
+            --soft-green: #f0fdf4;
+            --soft-yellow: #fffbeb;
+            --soft-red: #fef2f2;
+            
+            --badge-green-bg: #dcfce7;
+            --badge-green-text: #166534;
+            --badge-yellow-bg: #fef9c3;
+            --badge-yellow-text: #854d0e;
+            --badge-red-bg: #fee2e2;
+            --badge-red-text: #991b1b;
+            --badge-blue-bg: #dbeafe;
+            --badge-blue-text: #1e40af;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        /* Card Styles */
+        .custom-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Top Summary Cards */
+        .stat-card {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-radius: 10px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .stat-card.blue { background-color: #f0f7ff; border: 1px solid #d0e3ff; }
+        .stat-card.blue .stat-icon { background-color: #2563eb; color: #fff; }
+
+        .stat-card.green { background-color: #f0fdf4; border: 1px solid #bbf7d0; }
+        .stat-card.green .stat-icon { background-color: #16a34a; color: #fff; }
+
+        .stat-card.yellow { background-color: #fffbeb; border: 1px solid #fde68a; }
+        .stat-card.yellow .stat-icon { background-color: #d97706; color: #fff; }
+
+        .stat-card.red { background-color: #fef2f2; border: 1px solid #fecaca; }
+        .stat-card.red .stat-icon { background-color: #dc2626; color: #fff; }
+
+        .stat-label { font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 2px; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; line-height: 1; color: #0f172a; }
+
+        /* Stepper Workflow */
+        .workflow-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #64748b;
+            z-index: 2;
+        }
+
+        .step-item.active {
+            color: var(--primary-blue);
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .step-item.active .step-number {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .step-arrow {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Filter Controls */
+        .form-select-sm, .form-control-sm {
+            border-radius: 6px;
+            border-color: #cbd5e1;
+            font-size: 0.825rem;
+        }
+
+        .form-select-sm:focus, .form-control-sm:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Status Badges */
+        .badge-soft {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-block;
+            text-align: center;
+        }
+        .badge-soft-green { background-color: var(--badge-green-bg); color: var(--badge-green-text); }
+        .badge-soft-yellow { background-color: var(--badge-yellow-bg); color: var(--badge-yellow-text); }
+        .badge-soft-red { background-color: var(--badge-red-bg); color: var(--badge-red-text); }
+        .badge-soft-blue { background-color: var(--badge-blue-bg); color: var(--badge-blue-text); }
+
+        /* Custom Table */
+        .table-custom {
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+        .table-custom th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table-custom td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.825rem;
+        }
+        .table-custom tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .table-custom tr.selected-row {
+            background-color: #f0f7ff !important;
+        }
+
+        /* Side Detail Panel */
+        .detail-panel {
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 18px;
+        }
+
+        .detail-header-info {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 4px 10px;
+            font-size: 0.825rem;
+        }
+        .detail-header-info .label { color: #64748b; font-weight: 500; }
+        .detail-header-info .value { color: #0f172a; font-weight: 600; }
+
+        .param-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .param-title {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .param-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 4px 0;
+        }
+        .param-item-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #334155;
+        }
+
+        /* Radio Options */
+        .radio-custom .form-check-input:checked {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+        .radio-custom .form-check-label {
+            font-size: 0.825rem;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        /* Buttons */
+        .btn-custom-primary {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+        .btn-custom-primary:hover {
+            background-color: #15803d;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+            border-radius: 6px;
+            background: transparent;
+        }
+        .btn-outline-custom:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .btn-table-action {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .workflow-stepper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .step-arrow {
+                display: none;
+            }
+        }
+    </style>
+<div class="dashboard-container p-0">
+    
+    <!-- 1. HEADER SECTION -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+        <div>
+            <h4 class="fw-bold mb-1 text-dark" style="color: #0f172a;">Penilaian Ulang dan Rekomendasi Status KPM</h4>
+            <p class="text-muted mb-0" style="font-size: 0.875rem;">
+                Menilai perubahan kondisi KPM berdasarkan baseline, RII, realisasi intervensi, dan hasil monitoring.
+            </p>
+        </div>
+        <div>
+            <div class="btn btn-sm btn-white border shadow-sm rounded-3 fw-semibold text-secondary px-3 py-2 bg-white">
+                <i class="bi bi-calendar3 me-2"></i> 18 Sep 2026
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. TOP SUMMARY CARDS (4 Cards) -->
+    <div class="row g-3 mb-4">
+        <!-- Card 1 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card blue custom-card">
+                <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Total Dinilai</div>
+                    <div class="stat-value">100</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card green custom-card">
+                <div class="stat-icon">
+                    <i class="bi bi-check-lg"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Layak Direkomendasikan</div>
+                    <div class="stat-value">40</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card yellow custom-card">
+                <div class="stat-icon">
+                    <i class="bi bi-dash-lg"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Belum Layak</div>
+                    <div class="stat-value">45</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card red custom-card">
+                <div class="stat-icon">
+                    <i class="bi bi-x-lg"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Verifikasi Lanjutan</div>
+                    <div class="stat-value">15</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. STEPPER / WORKFLOW BAR -->
+    <div class="workflow-stepper custom-card mb-4">
+        <div class="step-item active">
+            <div class="step-number">1</div>
+            <span>Tarik Hasil Monev</span>
+        </div>
+        <i class="bi bi-chevron-right step-arrow"></i>
+        <div class="step-item active">
+            <div class="step-number">2</div>
+            <span>Penilaian Ulang</span>
+        </div>
+        <i class="bi bi-chevron-right step-arrow"></i>
+        <div class="step-item">
+            <div class="step-number">3</div>
+            <span>Verifikasi dan Konfirmasi</span>
+        </div>
+        <i class="bi bi-chevron-right step-arrow"></i>
+        <div class="step-item">
+            <div class="step-number">4</div>
+            <span>Finalisasi Rekomendasi</span>
+        </div>
+    </div>
+
+    <!-- 4. MAIN SPLIT GRID AREA -->
+    <div class="row g-4">
+        
+        <!-- KOLOM KIRI: FILTER & TABEL DATA -->
+        <div class="col-12 col-xl-7">
+            <div class="custom-card p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Filter Dropdowns Row -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size:0.75rem;">Kecamatan</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Kecamatan</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size:0.75rem;">Desa/Kelurahan</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Desa/Kelurahan</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size:0.75rem;">Hasil Monev</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Hasil Monev</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label text-muted fw-semibold mb-1" style="font-size:0.75rem;">Status Rekomendasi</label>
+                            <select class="form-select form-select-sm">
+                                <option selected>Semua Status</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Search and Action Row -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-9 col-md-10">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" class="form-control form-control-sm border-start-0" placeholder="Cari nama atau ID KPM">
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-2">
+                            <button class="btn btn-primary btn-sm w-100 fw-semibold" style="background-color: #2563eb;">Terapkan</button>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID KPM</th>
+                                    <th>Nama KPM</th>
+                                    <th>Hasil Monev</th>
+                                    <th>Ekonomi</th>
+                                    <th>Sosial</th>
+                                    <th>Bukti</th>
+                                    <th>Rekomendasi</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Row 1 (Selected/Active) -->
+                                <tr class="selected-row">
+                                    <td class="fw-medium text-secondary">AST-KAB-0001</td>
+                                    <td class="fw-bold text-dark">SUGOYONO</td>
+                                    <td><span class="badge-soft badge-soft-yellow">Tercapai Sebagian</span></td>
+                                    <td class="text-secondary">Memenuhi</td>
+                                    <td class="text-secondary">Memenuhi</td>
+                                    <td class="text-secondary">Lengkap</td>
+                                    <td><span class="badge-soft badge-soft-green">Layak Direkomendasikan</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-primary btn-table-action py-1 px-3">Nilai</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td class="fw-medium text-secondary">AST-KAB-0002</td>
+                                    <td class="fw-bold text-dark">MAHMILUDDIN</td>
+                                    <td><span class="badge-soft badge-soft-green">Tercapai</span></td>
+                                    <td class="text-secondary">Memenuhi</td>
+                                    <td class="text-secondary">Memenuhi</td>
+                                    <td class="text-secondary">Lengkap</td>
+                                    <td><span class="badge-soft badge-soft-green">Layak Direkomendasikan</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-secondary btn-table-action py-1 px-3">Lihat</button>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr>
+                                    <td class="fw-medium text-secondary">AST-KAB-0004</td>
+                                    <td class="fw-bold text-dark">NURAINI</td>
+                                    <td><span class="badge-soft badge-soft-red">Belum Tercapai</span></td>
+                                    <td class="text-secondary">Belum Memenuhi</td>
+                                    <td class="text-secondary">Memenuhi</td>
+                                    <td><span class="text-warning-emphasis fw-semibold">Perlu Dilengkapi</span></td>
+                                    <td><span class="badge-soft badge-soft-yellow">Verifikasi Lanjutan</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-primary btn-table-action py-1 px-2">Tindak Lanjut</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Table Footer Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                    <span class="text-muted" style="font-size: 0.8rem;">Menampilkan 3 dari 3 data</span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- KOLOM KANAN: DETAIL & FORM PENILAIAN KPM -->
+        <div class="col-12 col-xl-5">
+            <div class="detail-panel">
+                
+                <!-- Panel Header -->
+                <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                    <i class="bi bi-person-fill text-primary fs-5"></i>
+                    <h6 class="fw-bold mb-0 text-dark">Penilaian KPM Terpilih</h6>
+                </div>
+
+                <!-- Profile Info Grid -->
+                <div class="detail-header-info mb-3">
+                    <div class="label">Nama</div>
+                    <div class="value">: SUGOYONO</div>
+                    
+                    <div class="label">ID</div>
+                    <div class="value">: AST-KAB-0001</div>
+                    
+                    <div class="label">Desa/Kelurahan</div>
+                    <div class="value">: Siumbut Umbut</div>
+                    
+                    <div class="label">Kecamatan</div>
+                    <div class="value">: Kota Kisaran Timur</div>
+                    
+                    <div class="label">Hasil Monev</div>
+                    <div class="value">: <span class="badge-soft badge-soft-yellow">Tercapai Sebagian</span></div>
+                    
+                    <div class="label align-self-center">Bukti</div>
+                    <div class="value d-flex align-items-center justify-content-between">
+                        <span>: 6 Dokumen</span>
+                        <button class="btn btn-sm btn-outline-primary py-0 px-2 fs-7" style="font-size: 0.75rem;">
+                            <i class="bi bi-paperclip me-1"></i>Lihat Bukti
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kemandirian Ekonomi & Sosial Block -->
+                <div class="row g-2 mb-3">
+                    <!-- Kemandirian Ekonomi -->
+                    <div class="col-12 col-md-6">
+                        <div class="param-box h-100">
+                            <div class="param-title">Kemandirian Ekonomi</div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-bar-chart"></i> Kebutuhan dasar terpenuhi</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-briefcase"></i> Memiliki penghasilan/usaha</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-graph-up-arrow"></i> Penghasilan berkelanjutan</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-house-door"></i> Usaha mendukung kemandirian</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kemandirian Sosial -->
+                    <div class="col-12 col-md-6">
+                        <div class="param-box h-100">
+                            <div class="param-title">Kemandirian Sosial</div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-mortarboard"></i> Akses pendidikan</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-hospital"></i> Akses pelayanan kesehatan</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-house-check"></i> Kelayakan tempat tinggal</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-item-text"><i class="bi bi-droplet"></i> Akses sanitasi layak</div>
+                                <span class="badge-soft badge-soft-green py-0 px-1">Memenuhi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Section -->
+                <div class="mb-3">
+                    <label class="fw-bold text-dark mb-2" style="font-size: 0.8rem;">Kesimpulan</label>
+                    <div class="radio-custom d-flex flex-column gap-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulan" id="radioGraduasi" checked>
+                            <label class="form-check-label" for="radioGraduasi">Layak Direkomendasikan Graduasi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulan" id="radioBelum">
+                            <label class="form-check-label" for="radioBelum">Belum Layak Graduasi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kesimpulan" id="radioVerifikasi">
+                            <label class="form-check-label" for="radioVerifikasi">Memerlukan Verifikasi Lanjutan</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Textareas -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.75rem;">Catatan Penilaian</label>
+                        <textarea class="form-control form-control-sm" rows="2" placeholder="Tulis catatan penilaian..."></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.75rem;">Tindak Lanjut</label>
+                        <textarea class="form-control form-control-sm" rows="2" placeholder="Tulis tindak lanjut..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button class="btn btn-custom-primary btn-sm flex-fill py-2">Simpan Penilaian</button>
+                    <button class="btn btn-outline-custom btn-sm flex-fill py-2">Kirim untuk Konfirmasi</button>
+                    <button class="btn btn-outline-custom btn-sm flex-fill py-2">Cetak Ringkasan</button>
+                </div>
+
+                <!-- Warning Notice Alert -->
+                <div class="alert alert-warning py-2 px-3 mb-0 d-flex align-items-center gap-2 border-0 rounded-3" style="background-color: #fef9c3; color: #854d0e; font-size: 0.75rem;">
+                    <i class="bi bi-info-circle-fill fs-6"></i>
+                    <span>Rekomendasi status KPM belum merupakan penetapan administrasi graduasi.</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 5. FOOTER NOTICE -->
+    <div class="text-muted mt-4 pt-2 style-footer-text" style="font-size: 0.75rem;">
+        Data penilaian, bukti, petugas, tanggal, dan setiap perubahan tersimpan dalam register ketertelusuran.
+    </div>
+
+</div>
